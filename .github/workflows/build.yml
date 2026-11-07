@@ -50,6 +50,10 @@ jobs:
         run: |
           "$SDK/renpy.sh" "$GITHUB_WORKSPACE" lint lint.txt || true
           cat lint.txt
+          # Ayrıştırma hatasında rapor "Statistics" bölümüne hiç ulaşmaz.
+          if ! grep -q "Statistics:" lint.txt; then
+            echo "::error::Betik ayrıştırılamadı (lint raporu eksik)"; exit 1
+          fi
           if grep -E "^game/.*rpy:[0-9]+ " lint.txt; then
             echo "::error::Lint hataları bulundu"; exit 1
           fi

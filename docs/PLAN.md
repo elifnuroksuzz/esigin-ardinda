@@ -120,6 +120,14 @@ yere yerleştirildi; tekrar eden metin oyuncuyu yorar.
 - [x] İlk karşılaşmada ipucu kartları (defter, YANKI, zamanlı seçim, HUD)
 - [x] Normal mod duman testi (gerçek tıklamalarla) + otomatik oynanış testi
 
+### Faz 2.6 — Oyunlaştırma ve arayüz ✅
+- [x] Popüler oyun analizi (docs/OYUN_TASARIMI.md)
+- [x] Tur tabanlı keşif motoru: gürültü, dinleme, arama, şişe, kaydedici, saklanma, ateş
+- [x] 3 yaratık davranışı: Nöbetçi (yavaş, sesle), Kırpıntı (hızlı, kör), Sürüngen (çok hızlı, ışığa)
+- [x] 7 keşif haritası bölümlere yerleştirildi; oda olayları hikâye sahnelerini tetikler
+- [x] Teçhizat ekranı (4 yuva), keşif derecelendirmesi (★), 2 yeni başarım
+- [x] Arayüz: Oswald başlık fontu, yeni diyalog kutusu, numaralı seçim kartları, yeni ana menü, HUD
+
 ### Faz 3 — Cila (senin sıradaki adımların)
 - [ ] Arka planları AI/foto ile değiştir (aynı dosya adlarıyla `game/images/bg/` içine koy — kod değişmez)
 - [ ] freesound.org'dan gerçek kayıtlarla sesleri güçlendir (aynı dosya adları)

@@ -62,50 +62,10 @@ label .dongu:
     a "Uzun yolun taş işaretleri sağlam. Seçim senin."
     m "Sesi duyuyorum diye doğru olduğuna inanmam gerekmiyor."
 
-    menu:
-        "Kısa yol: açık ama sesin geldiği taraf. Gizlenerek ilerle.":
-            $ rota5 = "kisa"
-            jump .kisa
-        "Uzun yol: taşlık ve sessiz. Daha güvenli ama yorucu.":
-            $ rota5 = "uzun"
-            jump .uzun
+    narrator "Kısa patika açıklıktan geçiyor; tıkırtılar oradan geliyordu. Uzun yol taşlık ve yorucu, ama dere sesleri örtüyor."
+    call explore("orman")
+    $ rota5 = "kisa" if "aciklik" in ex["visited"] else "uzun"
 
-label .kisa:
-    call tip("qte", "Zamanlı seçim", "Kırmızı çubuklu seçimlerde süre sınırlıdır. Süre biterse karar senin yerine verilir; çoğu zaman iyi bir karar olmaz.")
-    narrator "Patika açık. Ağaçlar seyrek. Sis yerden diz boyu yükseliyor."
-    $ sfx("crawl")
-    narrator "Sağdan, çalıların arasından bir şey yaklaşıyor. Hızlı. Çok ayaklı bir şeyin tıkırtısı."
-    call screen qte("Bir şey yaklaşıyor!", [("Yere çök ve kıpırdama", "cok"), ("Feneri yak, ne olduğunu gör", "fener"), ("Koş", "kos")], 4.0, "donakal")
-    if _return == "cok":
-        narrator "Mert Aras'ı da kolundan çekip yere çöker. Nefeslerini tutarlar."
-        narrator "Tıkırtı bir metre ötelerinden geçer. Durur. Sonra uzaklaşır."
-    elif _return == "fener":
-        $ stress(12)
-        $ flash("#ffffff")
-        narrator "Işık sisin içinde bir duvar gibi yanar. Hiçbir şey göremezler; ama bir şey onları görür."
-        $ sfx("growl")
-        a "Söndür! Söndür onu!"
-        narrator "Karanlıkta, kıpırdamadan beklerler. Uzun bir süre sonra tıkırtı uzaklaşır."
-    elif _return == "kos":
-        $ stress(15)
-        $ sfx("footsteps")
-        narrator "Koşarlar. Arkalarındaki tıkırtı da hızlanır. Bir dere yatağına atlayıp suyun sesine saklanırlar."
-        $ jolt()
-    else:
-        $ stress(10)
-        narrator "Mert donakalır. Neyse ki Aras onu yere çeker."
-        narrator "Tıkırtı yanlarından geçer, uzaklaşır."
-    jump .rota_sonu
-
-label .uzun:
-    narrator "Taşlık yol kalçaları yakan bir yokuşla başlıyor. Her adımda kayalar ayaklarının altında kayıyor."
-    narrator "Yavaş ilerliyorlar. Ama kimse onları duymuyor."
-    $ stress(-5)
-    a "Yarım saat kaybettik."
-    m "Yarım saat. Deniz için ne demek bilmiyorum."
-    jump .rota_sonu
-
-label .rota_sonu:
     ## 3. Kişisel sınav --------------------------------------------------------
     scene bg forest_night with dissolve
     show mert at sil_left

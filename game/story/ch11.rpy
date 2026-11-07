@@ -9,6 +9,36 @@ label ch11:
     show mert at sil_center with dissolve
     narrator "B3'ün arka koridorları. Işıkların yarısı sönük. Fener ışığı duvarlarda titriyor."
     $ drain_pil(6)
+    $ sfx("kirpinti")
+    narrator "Metal zeminde tıkırtılar. Küçük, soluk, gözsüz bir şey bir boru yığınının altından çıkıp karanlığa karışıyor."
+    show kirpinti at creature_floor
+    kirp "(Metal üzerinde tıkırtı.)"
+    m "{size=-4}Kör. Sese geliyor. Bir tane daha var… belki daha fazla.{/size}"
+    hide kirpinti with dissolve
+    $ add_note("kirpinti")
+    narrator "Tabancada [mermi] mermi var. Her atış koridorlarda yankılanır. Bir şişe çok daha sessiz bir silahtır."
+    call explore("gecis")
+    scene bg b3_corridor with dissolve
+    show mert at sil_center with dissolve
+    narrator "Silah sınırsız üstünlük sağlamıyor. Büyük YANKI'lara karşı ise hiç güvenilir değil."
+
+    ## 4. Aras'a söz -----------------------------------------------------------
+    $ sfx("radio")
+    narrator "Mert bozuk telsizi açar."
+    m_tel "Aras, beni duyuyorsan… vazgeçmedim."
+    $ sfx("static")
+    a_tel "{size=-6}…buradayım…{/size}"
+    m_tel "Dayan. Geliyorum."
+    narrator "Aras'ın öldüğüne dair bir kanıt yok. Bu yeter."
+    narrator "Bir sonraki kapının ardında soğuk, mavi ışıklı araştırma katı uzanıyor."
+    call pil_check
+    return
+
+
+## Haritadaki "Hoparlör koridoru" odasına ilk girişte
+label ev_hoparlor:
+    scene bg b3_dark with dissolve
+    show mert at sil_center with dissolve
     $ sfx("echo_voice")
     m_fake "Buraya gel."
     m "Bu benim sesim."
@@ -33,59 +63,20 @@ label ch11:
     $ add_note("hoparlor_yanki")
 
     menu:
-        "Sağ koridordan, sesin geldiği yerden geç.":
+        "Sağ taraftaki karanlığa, sesin geldiği yere bak.":
             $ stress(15)
             $ sahte_kanma += 1
             narrator "Mert sağa birkaç adım atar. Karanlıkta bir şey kıpırdar. Ses birden kesilir."
             $ sfx("growl")
             narrator "Geri çekilir. Kalbi kulaklarında atıyor."
             m "Aptal. Sesi duyunca gidilmez."
-        "Sol koridordan, susturduğun hoparlörün altından geç.":
-            narrator "Sessiz koridordan geçer. Arkasında, sağdaki karanlık bir süre daha 'Buraya gel' der. Sonra susar."
+        "Sesi duymazdan gel ve uzaklaş.":
+            narrator "Mert arkasını döner. Karanlık bir süre daha 'Buraya gel' der. Sonra susar."
+    return
 
-    ## 2. Kırpıntı -------------------------------------------------------------
-    scene bg b3_corridor with dissolve
-    show mert at sil_left with dissolve
-    $ sfx("kirpinti")
-    narrator "Metal zeminde tıkırtılar. Küçük, soluk, gözsüz bir şey bir boru yığınının altından çıkıyor."
-    show kirpinti at creature_floor
-    kirp "(Metal üzerinde tıkırtı.)"
-    m "{size=-4}Kıpırdama… sesime geliyorlar.{/size}"
-    narrator "Yerde boş bir cam şişe var. Tabancada [mermi] mermi."
 
-    call screen qte("Kırpıntı yaklaşıyor", [("Şişeyi uzağa fırlat", "sise"), ("Ateş et", "ates"), ("Geri çekil", "geri")], 5.0, "fark")
-    if _return == "sise":
-        $ sfx("bottle")
-        thought "Önce şişeyi uzağa at. Sonra geç."
-        narrator "Cam koridorun öbür ucunda kırılır. Kırpıntı o yöne atılır. Mert yanından süzülür."
-        $ kirpinti_atlatma += 1
-    elif _return == "ates":
-        if use_bullet():
-            $ sfx("gunshot")
-            $ flash("#fff4d0")
-            $ kirpinti_vuruldu += 1
-            narrator "Tek atış. Küçük gövde yere yığılır. Kulakları çınlıyor."
-            narrator "Silah sesi koridorlarda yankılanır. Uzakta bir şey bu sesi duymuştur."
-            $ stress(5)
-        else:
-            $ sfx("lock_click")
-            narrator "Tetik boşa düşer. Mermi yok."
-            $ stress(15)
-            narrator "Kırpıntı ses yönüne atılır. Mert son anda bir dolabın arkasına kaçar."
-    elif _return == "geri":
-        narrator "Mert yavaşça, topuklarını kaldırarak geri çekilir. Kırpıntı bir süre havayı koklar, sonra başka yöne döner."
-        $ kirpinti_atlatma += 1
-    else:
-        $ stress(15)
-        narrator "Kırpıntı ayak sesini duyar. Çarpar. Mert onu tekmeleyip uzaklaştırır, bir kapının arkasına kaçar."
-        if ilkyardim > 0:
-            $ ilkyardim -= 1
-            narrator "Bileğinde ince bir kesik. İlk yardım paketinden bir sargı harcar."
-    hide kirpinti with dissolve
-    $ add_note("kirpinti")
-    narrator "Silah sınırsız üstünlük sağlamıyor. Büyük YANKI'lara karşı ise hiç güvenilir değil."
-
-    ## 3. Ses izi --------------------------------------------------------------
+## Haritadaki "Kontrol odası" odasına ilk girişte
+label ev_ses_izi:
     scene bg control_room with dissolve
     show mert at sil_left with dissolve
     narrator "Küçük bir kontrol odası. Ekranlardan biri hâlâ açık: DIŞ MİKROFON ARŞİVİ."
@@ -98,15 +89,4 @@ label ch11:
     m "Birileri seni dinlemiş, Deniz."
     $ add_evidence("deniz_ses")
     m "Deniz'in sesini duyarsam önce nereden geldiğini anlayacağım."
-
-    ## 4. Aras'a söz -----------------------------------------------------------
-    $ sfx("radio")
-    narrator "Mert bozuk telsizi açar."
-    m_tel "Aras, beni duyuyorsan… vazgeçmedim."
-    $ sfx("static")
-    a_tel "{size=-6}…buradayım…{/size}"
-    m_tel "Dayan. Geliyorum."
-    narrator "Aras'ın öldüğüne dair bir kanıt yok. Bu yeter."
-    narrator "Bir sonraki kapının ardında soğuk, mavi ışıklı araştırma katı uzanıyor."
-    call pil_check
     return

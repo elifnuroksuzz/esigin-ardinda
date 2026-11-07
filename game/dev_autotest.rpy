@@ -14,7 +14,10 @@ init 999 python:
         def _shot():
             _shot_n[0] += 1
             if _shot_dir and _shot_n[0] % int(os.environ.get("ESIK_SHOT_EVERY", "25")) == 0:
-                renpy.screenshot(os.path.join(_shot_dir, "shot_%04d.png" % _shot_n[0]))
+                try:
+                    renpy.screenshot(os.path.join(_shot_dir, "shot_%04d.png" % _shot_n[0]))
+                except Exception:
+                    pass
         config.start_interact_callbacks.append(_shot)
 
 label autotest_run:
@@ -29,6 +32,20 @@ label autotest_run:
         $ suppress_overlay = False
         $ autotest_mode = True
         $ _game_menu_screen = "save"
+        if os.environ.get("ESIK_SCREEN"):
+            $ setup_for(8)
+            $ autotest_mode = False
+            $ renpy.config.skipping = None
+            call screen expression os.environ["ESIK_SCREEN"]
+            $ renpy.quit()
+        if os.environ.get("ESIK_MAPTEST"):
+            $ setup_for(8)
+            $ persistent.tips = set(["harita"])
+            $ autotest_mode = os.environ.get("ESIK_MAPAUTO", "1") == "1"
+            $ renpy.config.skipping = True
+            call explore(os.environ["ESIK_MAPTEST"])
+            $ print("MAPTEST_DONE turn=%d noise=%d dmg=%d" % (ex["turn"], ex["noise_total"], ex["damage"]))
+            $ renpy.quit()
         call start
         $ print("AUTOTEST_DONE notes=%d kanit=%d gerginlik=%d mermi=%d rezonans=%d final=%s" % (len(notes), len(kanit), gerginlik, mermi, rezonans, final_yontem))
         $ renpy.quit()

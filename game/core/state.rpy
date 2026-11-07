@@ -118,6 +118,10 @@ init -3 python:
             mermi = 6
             ilkyardim = 1
         if n >= 8:
+            store.sise = 2
+            store.yedek_pil = 1
+            store.kaydedici = 1
+        if n >= 8:
             show_hud = True
         if n >= 11:
             mermi = 5

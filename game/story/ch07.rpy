@@ -25,14 +25,18 @@ label ch07:
     $ ilkyardim = 1
     $ pil = 100
 
-    narrator "Çantada yer az. Teçhizatı hafif tutmaları gerek. Bir şey daha alabilirler."
-    menu:
-        "Yedek fener pili (bir kez fener pilini doldurur).":
-            $ yedek_pil = True
-            ka "İyi seçim. Karanlık, aşağıda en büyük düşmanınız olacak."
-        "İkinci ilk yardım paketi.":
-            $ ilkyardim = 2
-            el "Umarım ikisini de geri getirirsin. Kapağı açılmamış hâlde."
+    narrator "Masada daha fazlası var. Ama çantada yer az. Teçhizatı hafif tutmaları gerek."
+    $ quick_menu = False
+    window hide
+    call screen loadout
+    $ loadout_apply(_return)
+    $ quick_menu = True
+    if "pil" in _return:
+        ka "İyi seçim. Karanlık, aşağıda en büyük düşmanınız olacak."
+    if "kaydedici" in _return:
+        em "Kaydediciye senin sesini koydum. Kendi sesin onları kandırsın, onlar seni değil."
+    if "ilkyardim" in _return:
+        el "Umarım hepsini geri getirirsin. Kapağı açılmamış hâlde."
 
     hide bora
     hide kaan
@@ -102,4 +106,4 @@ label ch07:
     a "Beraber."
     return
 
-default yedek_pil = False
+default yedek_pil = 0

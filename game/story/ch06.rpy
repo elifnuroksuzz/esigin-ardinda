@@ -57,31 +57,19 @@ label ch06:
     show surungen at creature_floor
     narrator "Arkalarında tıkırtı başlar."
 
-    call screen qte("Peşinizde!", [("Feneri yere at, ışığı takip etsin", "fener"), ("Koş!", "kos"), ("Dar geçide gir, görüşünü kes", "gecit")], 4.0, "yakalandi")
-    if _return == "fener":
-        a "Feneri yere tut. Bizi değil, ışığı takip etsin."
-        $ sfx("flashlight")
-        narrator "Fener çalılara yuvarlanır. Yaratık ışığa atılır. İkili ters yöne süzülür."
-    elif _return == "gecit":
-        narrator "İki kaya arasındaki dar boşluğa sıkışırlar. Yaratığın gövdesi bu boşluğa girmez."
-        narrator "Kayaları tırmalar, sonra ilgisini kaybeder."
-    elif _return == "kos":
-        $ stress(12)
-        $ sfx("footsteps")
-        a "Bilmiyorum. Koş!"
-        narrator "Koşarlar. Dallar yüzlerini keser. Yaratık bir an yanlarında, bir an arkalarında."
-    else:
-        $ stress(18)
-        $ sfx("growl")
-        $ jolt(True)
-        narrator "Bir şey Mert'in sırtına çarpar. Yere düşer. Aras onu kolundan tutup çeker."
-        narrator "Kaya duvarının ardına yuvarlanırlar. Ceketinde üç uzun yırtık."
-
+    a "Feneri kapalı tut. Işığa ve sese geliyor."
+    a "Taş duvarın ötesinde kaya yarığı var. O gövde oraya sığmaz."
     hide surungen with dissolve
+    $ bgm(None, 1.0)
+    call explore("servis")
+    scene bg forest_fog with dissolve
+    $ amb("forest_night")
+    show mert at sil_left
+    show aras at sil_right
+    with dissolve
     m "Duvara tırmandı… nasıl tırmandı o?"
     narrator "Servis duvarının üzerinde, tesis yönüne doğru tırmanıp kaybolur. Yok olmaz. Sadece gider."
     $ add_note("surungen")
-    $ bgm(None)
 
     ## 3. Kapıdaki iz ----------------------------------------------------------
     scene bg echo_gate with long_fade

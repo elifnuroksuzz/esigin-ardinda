@@ -31,27 +31,12 @@ label ch03:
     a "Boya yeni değil. Ama kablo hattı kullanılmış."
     narrator "Aras cihazlara dokunmaz. Önce çevreye bakmak gerekiyor."
 
-    $ bakilan3 = set()
-label .incele:
-    menu:
-        "Bakım kapağının arkasındaki kablo hattı." if "kablo" not in bakilan3:
-            $ bakilan3.add("kablo")
-            narrator "Kalın, zırhlı bir kablo kapağın arkasından çıkıp doğrudan toprağın altına iniyor. Kenarındaki toz silinmiş."
-            a "Yakın zamanda biri bu kapağı açmış."
-            jump .incele
-        "Kulenin etrafındaki tel örgü." if "tel" not in bakilan3:
-            $ bakilan3.add("tel")
-            narrator "Tel örgünün bir bölümü kesilmiş, sonra özensizce geri bükülmüş. Kesik uçlar paslanmamış."
-            jump .incele
-        "Çamurdaki izler." if "iz" not in bakilan3:
-            $ bakilan3.add("iz")
-            narrator "Ağır iş botlarına ait ayak izleri. İki kişi. En fazla birkaç günlük."
-            m "Deniz'in ayakkabıları değil."
-            jump .incele
-        "Yeterince gördük. Devam et." if len(bakilan3) >= 2:
-            pass
-
-    $ add_note("kule_izleri")
+    call explore("kule")
+    scene bg tower with dissolve
+    $ amb("tower_hum")
+    show mert at sil_left
+    show aras at sil_right
+    with dissolve
     m "Biri hâlâ çalıştırıyor yani."
 
     ## 3. Yanlış yankı ---------------------------------------------------------

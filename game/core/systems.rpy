@@ -43,13 +43,15 @@ screen chapter_card(num, title, sub):
         spacing 14
         text "BÖLÜM [num]":
             xalign 0.5
+            font "fonts/Oswald-Medium.ttf"
             size 22
             color "#c8a24a"
-            kerning 6
+            kerning 10
         text "[title]":
             xalign 0.5
-            size 64
-            font "DejaVuSans-Bold.ttf"
+            size 84
+            font "fonts/Oswald-SemiBold.ttf"
+            kerning 12
             color "#e6e2da"
             at glitchy
         null height 6
@@ -87,47 +89,61 @@ screen hud():
     if show_hud and not main_menu:
         frame:
             xalign 1.0
-            xoffset -12
-            ypos 12
-            padding (12, 8, 12, 10)
-            background Solid("#000000a8")
+            xoffset -14
+            ypos 14
+            xsize 214
+            padding (14, 10, 14, 12)
+            background Solid("#05070acc")
             vbox:
-                spacing 3
+                spacing 5
                 hbox:
-                    spacing 8
-                    text "FENER" size 13 color "#8a857c" min_width 92
-                    text "[pil]%" size 13 color ("#e05040" if pil < 25 else "#e6e2da")
+                    xfill True
+                    text "FENER" style "hud_label"
+                    text "[pil]%" style "hud_value" xalign 1.0 color ("#e05040" if pil < 25 else "#e6e2da")
                 bar:
                     value StaticValue(pil, 100)
-                    xsize 150
+                    xfill True
                     ysize 4
                     left_bar Solid("#e05040" if pil < 25 else "#c8a24a")
-                    right_bar Solid("#2a2620")
+                    right_bar Solid("#1c1a16")
                 hbox:
-                    spacing 8
-                    text "MERMİ" size 13 color "#8a857c" min_width 92
-                    text "[mermi]" size 13 color "#e6e2da"
-                if rezonans_alindi:
-                    hbox:
-                        spacing 8
-                        text "REZONANS" size 13 color "#9080ff" min_width 92
-                        text "[rezonans]" size 13 color "#c0b8ff"
-                hbox:
-                    spacing 8
-                    text "İLK YARDIM" size 13 color "#8a857c" min_width 92
-                    text "[ilkyardim]" size 13 color "#e6e2da"
-                hbox:
-                    spacing 8
-                    text "NABIZ" size 13 color "#8a857c" min_width 92
-                    bar:
-                        value StaticValue(gerginlik, 100)
-                        xsize 50
-                        ysize 4
-                        yalign 0.5
-                        left_bar Solid("#c2302f")
-                        right_bar Solid("#2a2620")
+                    xfill True
+                    text "NABIZ" style "hud_label"
+                    text "[gerginlik]" style "hud_value" xalign 1.0 color ("#e05040" if gerginlik >= 70 else "#e6e2da")
+                bar:
+                    value StaticValue(gerginlik, 100)
+                    xfill True
+                    ysize 4
+                    left_bar Solid("#c2302f")
+                    right_bar Solid("#1c1a16")
+                null height 2
+                grid 3 2:
+                    xfill True
+                    spacing 2
+                    text "● [mermi]" style "hud_item"
+                    text "◍ [sise]" style "hud_item"
+                    text "✚ [ilkyardim]" style "hud_item"
+                    text "▮ [yedek_pil]" style "hud_item"
+                    text "◉ [kaydedici]" style "hud_item"
+                    if rezonans_alindi:
+                        text "◆ [rezonans]" style "hud_item" color "#b0a8ff"
+                    else:
+                        null
 
-    ## Yüksek gerginlikte ekran kenarları kızarır
+style hud_label is default:
+    font "fonts/Oswald-Medium.ttf"
+    size 13
+    kerning 3
+    color "#8a857c"
+
+style hud_value is default:
+    font "fonts/Oswald-Medium.ttf"
+    size 14
+    color "#e6e2da"
+
+style hud_item is default:
+    size 14
+    color "#cfc9bd"
 
 init python:
     config.overlay_screens.append("hud")
@@ -272,7 +288,7 @@ label pil_check:
         menu:
             "Fener titriyor (kalan pil: [pil]). Yedek pili tak.":
                 $ pil = 100
-                $ yedek_pil = False
+                $ yedek_pil -= 1
                 narrator "Yeni pil yerine oturur. Işık yeniden beyazlaşır."
             "Şimdilik idare et.":
                 pass

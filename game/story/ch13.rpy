@@ -13,46 +13,10 @@ label ch13:
     $ sfx("kirpinti")
     narrator "Aşağıda, bir ızgaranın altında tıkırtılar. Üç, belki dört Kırpıntı."
     m "Kırpıntı aşağıda. Kabloyu sarsarsam duyacak."
-    narrator "Duvarda paslı bir bakım pervanesi ve şalteri. Elinin altında gevşek bir kablo demeti."
-
-label .gecit:
-    menu:
-        "Pervanenin şalterini indir.":
-            $ sfx("fan")
-            narrator "Pervane homurdanarak döner. Tıkırtılar sesin geldiği tarafa yönelir."
-            m "Yavaş… bir adım daha."
-            narrator "Mert ızgaranın üstünden, pervanenin gürültüsüne saklanarak geçer."
-            $ add_note("pervane")
-        "Kablo demetini çekerek yolu aç.":
-            $ stress(10)
-            $ sfx("metal_knock")
-            narrator "Kablolar duvara çarpar. Tıkırtılar bir anda susar. Sonra hızla yaklaşır."
-            call screen qte("Sana geliyorlar!", [("Pervanenin şalterine uzan", "pervane"), ("Ateş et", "ates")], 3.5, "kos")
-            if _return == "pervane":
-                $ sfx("fan")
-                narrator "Pervane döner. Kırpıntı'lar gürültüye döner. Mert nefes nefese geçer."
-                $ add_note("pervane")
-            elif _return == "ates":
-                if use_bullet():
-                    $ kirpinti_vuruldu += 1
-                    $ sfx("gunshot")
-                    narrator "Bir tanesi düşer. Diğerleri silah sesine doğru, yani ona doğru gelir. Mert koşar."
-                    $ stress(8)
-                else:
-                    narrator "Mermi yok. Mert koşar."
-                    $ stress(12)
-            else:
-                $ stress(15)
-                narrator "Mert koşar. Su ayak seslerini büyütüyor. Bir kapak bulur, üstüne kapatır."
-        "Ateş ederek temizle.":
-            if mermi >= 2:
-                $ mermi -= 2
-                $ kirpinti_vuruldu += 2
-                $ sfx("gunshot")
-                narrator "İki atış. İki Kırpıntı. Ötekiler kaçar. Kulakları çınlıyor; mermiler azaldı."
-            else:
-                narrator "Bu kadar mermin yok. Başka bir yol bul."
-                jump .gecit
+    narrator "Haritada bir bakım pervanesi işaretli. Çalıştırılırsa gürültüsü her şeyi kendine çeker."
+    m "Yem. Pervane bir yem olabilir."
+    call explore("drenaj")
+    $ add_note("pervane")
 
     ## 2. S-17'nin iki tarafı --------------------------------------------------
     scene bg b2_archive with dissolve

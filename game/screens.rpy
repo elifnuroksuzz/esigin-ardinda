@@ -90,10 +90,6 @@ screen say(who, what):
 
         text what id "what"
 
-    ## Yan görüntü (kullanılmıyor ama standart destek)
-    if not renpy.variant("small"):
-        add SideImage() xalign 0.0 yalign 1.0
-
 init python:
     config.character_id_prefixes.append('namebox')
 
@@ -108,33 +104,32 @@ style namebox_label is say_label
 style window:
     xalign 0.5
     xfill True
-    yalign gui.textbox_yalign
-    ysize gui.textbox_height
-    background Fixed(
-        Solid("#050607d8"),
-        Solid("#c8a24a40", ysize=1),
-        )
+    yalign 1.0
+    ysize 210
+    background Frame("gui/textbox.png", 0, 40, 0, 0)
 
 style namebox:
-    xpos gui.name_xpos
-    xanchor gui.name_xalign
-    ypos gui.name_ypos
-    ypadding 14
-    background None
+    xpos 214
+    ypos 22
+    xminimum 240
+    padding (20, 6, 40, 6)
+    background Frame("gui/namebox.png", 8, 4, 60, 4)
 
 style say_label:
-    properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
-    yalign 0.5
+    font "fonts/Oswald-Medium.ttf"
+    size 25
+    kerning 2
+    color gui.accent_color
     outlines [(2, "#000000aa", 0, 0)]
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
-    xpos gui.dialogue_xpos
-    xsize gui.dialogue_width
-    ypos gui.dialogue_ypos
+    xpos 236
+    xsize 820
+    ypos 82
+    size 23
+    line_spacing 5
     adjust_spacing False
-    line_spacing 4
     outlines [(1, "#00000088", 0, 0)]
 
 ## Girdi ######################################################################
@@ -163,13 +158,23 @@ style input:
     xmaximum gui.dialogue_width
 
 ## Seçim ######################################################################
+## Numaralı seçimler: 1–9 tuşlarıyla da seçilebilir.
 
 screen choice(items):
     style_prefix "choice"
 
+    add Solid("#00000066")
+
     vbox:
-        for i in items:
-            textbutton i.caption action i.action
+        for n, i in enumerate(items):
+            button:
+                action i.action
+                hbox:
+                    spacing 16
+                    text str(n + 1) style "choice_num"
+                    text i.caption style "choice_button_text"
+            if n < 9:
+                key str(n + 1) action i.action
 
 style choice_vbox is vbox
 style choice_button is button
@@ -177,24 +182,35 @@ style choice_button_text is button_text
 
 style choice_vbox:
     xalign 0.5
-    ypos 300
+    ypos 290
     yanchor 0.5
-    spacing gui.choice_spacing
+    spacing 14
 
 style choice_button:
-    xsize gui.choice_button_width
+    xsize 800
     xalign 0.5
-    padding (40, 12, 40, 12)
-    idle_background Solid("#0b0c0ecc")
-    hover_background Solid("#3a2f18ee")
-    insensitive_background Solid("#0b0c0e88")
+    padding (22, 14, 30, 14)
+    background Frame("gui/choice_idle.png", 8, 2, 8, 2)
+    hover_background Frame("gui/choice_hover.png", 8, 2, 8, 2)
     hover_sound "audio/sfx/ui_hover.ogg"
     activate_sound "audio/sfx/ui_select.ogg"
 
+style choice_num:
+    font "fonts/Oswald-SemiBold.ttf"
+    size 20
+    min_width 22
+    idle_color "#7a6a48"
+    hover_color "#e8d08a"
+    yalign 0.5
+
 style choice_button_text:
-    properties gui.text_properties("choice_button")
-    xalign 0.5
-    text_align 0.5
+    font gui.text_font
+    size 21
+    xmaximum 700
+    idle_color "#c8c1b4"
+    hover_color "#ffffff"
+    insensitive_color "#55555580"
+    yalign 0.5
 
 ## Hızlı menü #################################################################
 
@@ -206,16 +222,18 @@ screen quick_menu():
             style_prefix "quick"
             xalign 0.5
             yalign 1.0
+            yoffset -6
+            spacing 4
 
-            textbutton _("Geri") action Rollback()
-            textbutton _("Geçmiş") action ShowMenu('history')
-            textbutton _("Defter") action ShowMenu('journal')
-            textbutton _("Atla") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Oto") action Preference("auto-forward", "toggle")
-            textbutton _("Kaydet") action ShowMenu('save')
-            textbutton _("H.Kayıt") action QuickSave()
-            textbutton _("H.Yükle") action QuickLoad()
-            textbutton _("Ayarlar") action ShowMenu('preferences')
+            textbutton _("GERİ") action Rollback()
+            textbutton _("GEÇMİŞ") action ShowMenu('history')
+            textbutton _("DEFTER") action ShowMenu('journal')
+            textbutton _("ATLA") action Skip() alternate Skip(fast=True, confirm=True)
+            textbutton _("OTO") action Preference("auto-forward", "toggle")
+            textbutton _("KAYDET") action ShowMenu('save')
+            textbutton _("H.KAYIT") action QuickSave()
+            textbutton _("H.YÜKLE") action QuickLoad()
+            textbutton _("AYARLAR") action ShowMenu('preferences')
 
 init python:
     config.overlay_screens.append("quick_menu")
@@ -226,11 +244,17 @@ style quick_button is default
 style quick_button_text is button_text
 
 style quick_button:
-    properties gui.button_properties("quick_button")
-    padding (10, 4, 10, 4)
+    padding (9, 3, 9, 3)
+    hover_sound "audio/sfx/ui_hover.ogg"
 
 style quick_button_text:
-    properties gui.text_properties("quick_button")
+    font "fonts/Oswald-Medium.ttf"
+    size 13
+    kerning 2
+    idle_color "#6f6a62"
+    hover_color "#e8d08a"
+    selected_color "#c8a24a"
+    insensitive_color "#3a3732"
 
 ################################################################################
 ## Ana ve oyun menüsü
@@ -241,51 +265,55 @@ screen navigation():
     vbox:
         style_prefix "navigation"
 
-        xpos gui.navigation_xpos
-        yalign 0.5
+        xpos 70
+        ypos (300 if main_menu else 150)
 
-        spacing gui.navigation_spacing
+        spacing 2
 
         if main_menu:
             if renpy.newest_slot() is not None:
-                textbutton _("Devam Et") action FileLoad(renpy.newest_slot(), slot=True)
-            textbutton _("Yeni Oyun") action Start()
+                textbutton _("DEVAM ET") action FileLoad(renpy.newest_slot(), slot=True)
+            textbutton _("YENİ OYUN") action Start()
             if persistent.max_chapter > 1:
-                textbutton _("Bölüm Seç") action ShowMenu("chapter_select")
+                textbutton _("BÖLÜM SEÇ") action ShowMenu("chapter_select")
         else:
-            textbutton _("Geçmiş") action ShowMenu("history")
-            textbutton _("Defter") action ShowMenu("journal")
-            textbutton _("Kaydet") action ShowMenu("save")
+            textbutton _("GEÇMİŞ") action ShowMenu("history")
+            textbutton _("DEFTER") action ShowMenu("journal")
+            textbutton _("KAYDET") action ShowMenu("save")
 
-        textbutton _("Yükle") action ShowMenu("load")
-        textbutton _("Ayarlar") action ShowMenu("preferences")
+        textbutton _("YÜKLE") action ShowMenu("load")
+        textbutton _("AYARLAR") action ShowMenu("preferences")
+        textbutton _("BAŞARIMLAR") action ShowMenu("achievements")
 
         if _in_replay:
-            textbutton _("Tekrarı Bitir") action EndReplay(confirm=True)
+            textbutton _("TEKRARI BİTİR") action EndReplay(confirm=True)
         elif not main_menu:
-            textbutton _("Ana Menü") action MainMenu()
+            textbutton _("ANA MENÜ") action MainMenu()
 
-        textbutton _("Başarımlar") action ShowMenu("achievements")
-        textbutton _("Hakkında") action ShowMenu("about")
-        textbutton _("Yardım") action ShowMenu("help")
+        textbutton _("HAKKINDA") action ShowMenu("about")
+        textbutton _("YARDIM") action ShowMenu("help")
 
         if renpy.variant("pc"):
-            textbutton _("Çıkış") action Quit(confirm=not main_menu)
+            textbutton _("ÇIKIŞ") action Quit(confirm=not main_menu)
 
 style navigation_button is gui_button
 style navigation_button_text is gui_button_text
 
 style navigation_button:
     size_group "navigation"
-    padding (6, 6, 6, 6)
+    padding (0, 5, 40, 5)
     hover_sound "audio/sfx/ui_hover.ogg"
+    activate_sound "audio/sfx/ui_select.ogg"
 
 style navigation_button_text:
-    size 26
+    font "fonts/Oswald-Medium.ttf"
+    size 24
+    kerning 4
     idle_color "#8f8a80"
     hover_color "#e8d08a"
     selected_color "#ffffff"
     insensitive_color "#44444480"
+    hover_xoffset 10
 
 
 screen main_menu():
@@ -293,36 +321,58 @@ screen main_menu():
 
     add gui.main_menu_background
     add "fog_overlay"
+    add Transform("gui/map/dot.png", matrixcolor=TintMatrix("#ff2a1a")) pos (793, 66) at tower_blink
+    add "gui/menu_panel.png"
+    add "fx_vignette" alpha 0.6
 
-    frame:
-        style "main_menu_frame"
+    vbox:
+        xpos 66
+        ypos 70
+        spacing 0
+        text "EŞİĞİN":
+            font "fonts/Oswald-SemiBold.ttf"
+            size 76
+            kerning 14
+            color "#e6e2da"
+            at title_flicker
+        text "ARDINDA":
+            font "fonts/Oswald-Light.ttf"
+            size 52
+            kerning 22
+            color "#c8a24a"
+            yoffset -12
+        null height 4
+        text "ÇAMLIK  ·  ECHO  ·  YANKI":
+            font "fonts/Oswald-Medium.ttf"
+            size 14
+            kerning 5
+            color "#77736b"
 
     use navigation
 
-    vbox:
-        xalign 0.95
-        yalign 0.88
-        spacing 4
-        text "EŞİĞİN ARDINDA":
-            size 64
-            color "#e6e2da"
-            font "DejaVuSans-Bold.ttf"
-            xalign 1.0
-            outlines [(3, "#000000", 0, 0)]
-            at title_flicker
-        text "Çamlık Kasabası  •  ECHO  •  YANKI":
-            size 20
-            color "#c8a24a"
-            xalign 1.0
-        text "[config.version]":
-            size 14
-            color "#666"
-            xalign 1.0
+    hbox:
+        xpos 70
+        yalign 0.97
+        spacing 18
+        text "v[config.version]" size 13 color "#55524c"
+        $ got = sum(1 for a, n, d in ACHIEVEMENTS if achievement.has(a))
+        text "◆ [got]/[len(ACHIEVEMENTS)]" size 13 color "#7a6a48"
+        if persistent.map_stars:
+            $ st = sum(persistent.map_stars.values())
+            text "★ [st]/[len(MAPS) * 3]" size 13 color "#7a6a48"
 
 style main_menu_frame:
     xsize 300
     yfill True
     background Solid("#000000a0")
+
+transform tower_blink:
+    xanchor 0.5 yanchor 0.5
+    alpha 1.0 zoom 0.9
+    block:
+        ease 0.9 alpha 1.0 zoom 1.0
+        ease 0.9 alpha 0.25 zoom 0.7
+        repeat
 
 transform title_flicker:
     alpha 1.0
@@ -403,7 +453,7 @@ style return_button_text is navigation_button_text
 style game_menu_outer_frame:
     bottom_padding 30
     top_padding 120
-    background Solid("#0b0c0e")
+    background Fixed(Solid("#08090b"), "gui/menu_panel.png")
 
 style game_menu_navigation_frame:
     xsize 280
@@ -424,11 +474,13 @@ style game_menu_side:
     spacing 10
 
 style game_menu_label:
-    xpos 50
+    xpos 66
     ysize 120
 
 style game_menu_label_text:
-    size gui.title_text_size
+    font "fonts/Oswald-SemiBold.ttf"
+    size 46
+    kerning 8
     color "#c8a24a"
     yalign 0.5
 
@@ -765,6 +817,14 @@ screen help():
             text _("Tıkla / Boşluk / Enter: ilerle.   Fare tekerleği yukarı: geri sar.")
             text _("J: Defter (ipuçları ve kanıtlar).   Esc / sağ tık: menü.   Ctrl: atla.")
             text _("H: arayüzü gizle.   S: ekran görüntüsü.")
+            null height 10
+            text _("{b}Keşif haritası{/b}") color "#c8a24a"
+            text _("• Her eylem bir tur harcar; ardından yaratıklar hareket eder.")
+            text _("• Yürü: gürültü 1.  Koş: iki oda, gürültü 3.  Ateş: gürültü 5. Şişe hedefte 4 gürültü yapar.")
+            text _("• Dinle: 2 oda içindeki yaratıkları ve hedeflerini (◎) gösterir. Kırmızı ? halkası: bir şey duyuyorsun.")
+            text _("• Ara: fener pili harcar, malzeme ve ipucu bulur. ≋ odalarda makine gürültüsü sesini örter.")
+            text _("• Kesikli çizgiler havalandırmadır: Nöbetçi ve Sürüngen giremez. ▣ odalarda saklanabilirsin.")
+            text _("• Nöbetçi'ye mermi işlemez. Kırpıntı tek mermiyle durur ama silah sesi her şeyi çağırır.")
             null height 10
             text _("{b}Hayatta kalma{/b}") color "#c8a24a"
             text _("• Duyduğun her sesi takip etme. Tekrar eden nefes, gecikme ve yön değişimi YANKI'nın işaretidir.")

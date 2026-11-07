@@ -22,24 +22,6 @@ label ch08:
     call tip("hud", "Hayatta kalma göstergesi", "Sağ üstte {b}fener pili{/b}, {b}mermi{/b}, {b}ilk yardım{/b} ve {b}nabız{/b} var. Karanlık bölümler pili tüketir. Nabız yükseldikçe algın bozulur; 70'in üstünde kalbini duyarsın.")
     $ drain_pil(5)
 
-    ## 2. Eski güvenlik --------------------------------------------------------
-    scene bg security_hall with dissolve
-    show mert at sil_left
-    show aras at sil_right
-    with dissolve
-    narrator "Güvenlik holü. Soğuk beyaz ışık, sıra sıra dolaplar."
-    m "Şu dolapta tüfek var."
-    narrator "Kalın camın arkasında sıradan bir güvenlik tüfeği. Kilit paneli kırmızı: MERKEZÎ KİLİT."
-    a "Merkezi kilitli. Zorlayamayız."
-    $ add_note("tufek_dolabi")
-    narrator "Hemen yanında, duvara gömülü eski bir panel. Toz tutmuş bir etiket:"
-    centered "{color=#c8a24a}ACİL REZONANS BASTIRMA\nMANUEL TEST HATTI{/color}"
-    m "Ya şu eski düzenek?"
-    a "'Acil rezonans bastırma.' Besleme kapalı."
-    narrator "Göstergeler sönük. Kolu çekmek hiçbir şey yapmaz. Arızalı, devre dışı."
-    $ add_note("bastirma_hatti")
-    narrator "İki nesne de Mert'in aklında bir yere yerleşir."
-
     ## 3. Nöbetçi'nin sesi -----------------------------------------------------
     scene bg b3_dark with long_fade
     $ amb("b3")
@@ -59,22 +41,10 @@ label ch08:
     show nobetci at creature_far
     $ sfx("growl")
 
-label .gecis:
-    $ sfx("fan")
-    call screen qte("Pres iniyor — GÜRÜLTÜ!", [("Şimdi geç", "gec"), ("Bekle", "bekle")], 3.0, "bekle")
-    if _return == "gec":
-        $ sfx("footsteps")
-        narrator "Presin gürültüsü adımlarını yutar. Koridoru geçip bir boru yığınının arkasına çökerler."
-        narrator "Gövde döner, ama onlara değil. Presin olduğu yere."
-    else:
-        $ stress(10)
-        narrator "Pres yeniden kalkar. Koridorda derin bir sessizlik."
-        $ sfx("metal_drag")
-        narrator "Karanlıktaki gövde sana doğru bir adım atar. Durur. Dinler."
-        a "{size=-4}Bir sonrakinde. Gürültüyü bekle.{/size}"
-        jump .gecis
-
+    a "{size=-4}Pres gürlediğinde ses duyulmuyor. Bir de havalandırma var; o koca gövde oraya sığmaz.{/size}"
     hide nobetci with dissolve
+    call explore("b3")
+    scene bg security_hall with dissolve
     narrator "Yaratığın ağır bedeni dar alanda yavaş dönüyor. Bu fiziksel bir sınır."
     $ add_note("nobetci")
     call pil_check
@@ -98,4 +68,25 @@ label .gecis:
     $ add_note("beyaz_koridor")
     m "Siz kaç yıldır buradasınız?"
     h "Yeterince uzun. Keşke daha önce soru sorsaydım."
+    return
+
+
+## Haritadaki "Güvenlik holü" odasına ilk girişte
+label ev_b3_guvenlik:
+    scene bg security_hall with dissolve
+    show mert at sil_left
+    show aras at sil_right
+    with dissolve
+    narrator "Güvenlik holü. Soğuk beyaz ışık, sıra sıra dolaplar."
+    m "Şu dolapta tüfek var."
+    narrator "Kalın camın arkasında sıradan bir güvenlik tüfeği. Kilit paneli kırmızı: MERKEZÎ KİLİT."
+    a "Merkezi kilitli. Zorlayamayız."
+    $ add_note("tufek_dolabi")
+    narrator "Hemen yanında, duvara gömülü eski bir panel. Toz tutmuş bir etiket:"
+    centered "{color=#c8a24a}ACİL REZONANS BASTIRMA\nMANUEL TEST HATTI{/color}"
+    m "Ya şu eski düzenek?"
+    a "'Acil rezonans bastırma.' Besleme kapalı."
+    narrator "Göstergeler sönük. Kolu çekmek hiçbir şey yapmaz. Arızalı, devre dışı."
+    $ add_note("bastirma_hatti")
+    narrator "İki nesne de Mert'in aklında bir yere yerleşir."
     return

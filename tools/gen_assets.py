@@ -770,6 +770,72 @@ def gen_overlays():
     print("  fx grain + vignette")
 
 
+def gen_ui():
+    """Harita işaretçileri ve arayüz panelleri."""
+    md = os.path.join(GAME, "gui", "map")
+    os.makedirs(md, exist_ok=True)
+    n = 256
+    y, x = np.mgrid[0:n, 0:n]
+    d = np.sqrt((x - n / 2) ** 2 + (y - n / 2) ** 2) / (n / 2)
+    ring = np.exp(-((d - 0.85) / 0.05) ** 2) * 255
+    w = np.full((n, n), 255.0)
+    Image.fromarray(np.dstack([w, w, w, ring]).astype(np.uint8), "RGBA").save(os.path.join(md, "ring.png"))
+    n = 64
+    y, x = np.mgrid[0:n, 0:n]
+    d = np.sqrt((x - n / 2) ** 2 + (y - n / 2) ** 2) / (n / 2)
+    core = np.clip(1 - d / 0.32, 0, 1) ** 0.6
+    halo = np.exp(-(d / 0.55) ** 2) * 0.55
+    a = np.clip(core + halo, 0, 1) * 255
+    w = np.full((n, n), 255.0)
+    Image.fromarray(np.dstack([w, w, w, a]).astype(np.uint8), "RGBA").save(os.path.join(md, "dot.png"))
+
+    gd = os.path.join(GAME, "gui")
+    # Diyalog kutusu: alttan yukarı degrade + üstte ortası parlak altın çizgi
+    tw, th = 1280, 220
+    yy = np.linspace(0, 1, th)[:, None]
+    alpha = np.clip(0.25 + yy * 1.1, 0, 0.93) * 255
+    alpha = np.repeat(alpha, tw, axis=1)
+    rgb = np.zeros((th, tw, 3)) + np.array([5, 6, 8])
+    xs = np.linspace(-1, 1, tw)[None, :]
+    line = np.exp(-(xs / 0.55) ** 2)
+    rgb[0:2, :, :] = np.array([200, 162, 74]) * line[0][:, None]
+    alpha[0:2, :] = 255 * line[0] * 0.8
+    Image.fromarray(np.dstack([rgb, alpha]).astype(np.uint8), "RGBA").save(os.path.join(gd, "textbox.png"))
+    # İsim şeridi: solda dikey vurgu çizgisi
+    nw, nh = 300, 40
+    a = np.zeros((nh, nw))
+    xs = np.linspace(0, 1, nw)[None, :]
+    a[:, :] = np.clip(1 - xs * 1.1, 0, 1) * 170
+    rgb = np.zeros((nh, nw, 3)) + np.array([14, 13, 10])
+    rgb[:, 0:4] = [200, 162, 74]
+    a[:, 0:4] = 255
+    Image.fromarray(np.dstack([rgb, a]).astype(np.uint8), "RGBA").save(os.path.join(gd, "namebox.png"))
+    # Seçim düğmeleri
+    for state, edge, fill, glow in (("idle", (90, 80, 60), (10, 11, 13), 0.0), ("hover", (220, 180, 90), (34, 28, 16), 1.0)):
+        bw, bh = 800, 56
+        img = np.zeros((bh, bw, 4))
+        img[..., :3] = fill
+        xs = np.linspace(0, 1, bw)[None, :]
+        img[..., 3] = (200 - xs * 60) if state == "idle" else 235
+        img[:, 0:5, :3] = edge
+        img[:, 0:5, 3] = 255
+        if glow:
+            g = np.exp(-xs * 6)[0]
+            img[:, :, :3] += np.array([120, 90, 30]) * g[None, :, None] * 0.6
+        img[0, :, :3] = edge
+        img[0, :, 3] = 120
+        img[-1, :, :3] = edge
+        img[-1, :, 3] = 120
+        Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), "RGBA").save(os.path.join(gd, "choice_%s.png" % state))
+    # Ana menü sol paneli
+    pw, ph = 420, 720
+    xs = np.linspace(0, 1, pw)[None, :]
+    a = np.repeat(np.clip(1 - xs ** 1.6, 0, 1) * 235, ph, axis=0)
+    rgb = np.zeros((ph, pw, 3)) + np.array([3, 4, 6])
+    Image.fromarray(np.dstack([rgb, a]).astype(np.uint8), "RGBA").save(os.path.join(gd, "menu_panel.png"))
+    print("  ui: ring, dot, textbox, namebox, choice, menu_panel")
+
+
 # =============================================================================
 # Ses
 # =============================================================================
@@ -1173,6 +1239,7 @@ def main():
         print("Silüetler…")
         gen_chars()
         gen_overlays()
+        gen_ui()
     if a.only in (None, "audio"):
         print("Sesler…")
         gen_audio()

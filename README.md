@@ -35,6 +35,19 @@ Komut satırından:
 
 ---
 
+## Oyun ne tür?
+
+Hikâye odaklı bir korku oyunu, ama yalnızca okumuyorsun. Her bölümde hikâye sahneleri ile
+**tur tabanlı keşif haritaları** dönüşümlü gelir (Alien: Isolation, FNAF, Darkest Dungeon ve
+Into the Breach'ten esinlenildi; analiz: [docs/OYUN_TASARIMI.md](docs/OYUN_TASARIMI.md)).
+
+- **7 keşif haritası:** kule çevresi, orman, servis yolu, B3 bakım katı, B3/B2 geçişi, drenaj, son tahliye.
+- **Gürültü sistemi:** yaratıklar sesle avlanır. Yürümek sessiz, koşmak ve ateş etmek uzaktan duyulur.
+- **Kıt bilgi:** yaratıkları görmezsin, duyarsın. *Dinle* turu harcar ama nereye gittiklerini gösterir.
+- **Kaynaklar:** fener pili (aramak için), mermi, şişe, ses kaydedici, ilk yardım, Rezonans Kesici.
+- **Teçhizat:** ECHO'ya inmeden önce 4 yuvalık çantanı sen hazırlarsın.
+- **Derece:** her keşif tur, gürültü ve hasara göre ★–★★★ ile puanlanır.
+
 ## Nasıl oynanır
 
 | Tuş | İşlev |
@@ -42,6 +55,7 @@ Komut satırından:
 | Tık / Boşluk / Enter | İlerle |
 | Fare tekerleği yukarı | Geri sar |
 | **J** | **Defter** (ipuçları ve kanıtlar) |
+| **1–9** | Numaralı seçimi seç |
 | Esc / sağ tık | Menü |
 | Ctrl | Atla |
 
@@ -53,7 +67,7 @@ Komut satırından:
 - Bir bölüme ulaştıktan sonra ana menüde **Bölüm Seç** açılır.
 - Yeni oyunda **Gerilim** (önerilen) veya **Hikâye** (2× süre, yavaş gerginlik) modu seçilir.
 - Her bölüm sonunda özet kartı ve otomatik kayıt; ana menüde **Devam Et**.
-- **11 başarım** (ana menü → Başarımlar). Bazıları gizli yetenek ister: hiç YANKI'ya kanmamak,
+- **13 başarım** (ana menü → Başarımlar). Bazıları gizli yetenek ister: hiç YANKI'ya kanmamak,
   hiçbir zamanlı seçimi kaçırmamak, Kırpıntı'ları mermi harcamadan atlatmak…
 
 ### Sunum

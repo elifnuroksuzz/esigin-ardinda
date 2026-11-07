@@ -201,25 +201,15 @@ label .anahtar:
     narrator "Deniz sesi herkesten önce duydu. Bu bir yetenek değil. Beş günlük korkunun bıraktığı tetiklik."
     a "B3 servis rampasına. Koşmayın; kapıya kadar sessiz."
 
-    call screen qte("Nöbetçi koridorun ucunda!", [("Gürültülü pres bölümünden geç", "pres"), ("Düz koridordan koş", "kos")], 3.5, "yavas")
-    if _return == "pres":
-        $ sfx("fan")
-        narrator "Presin gürültüsü dördünün adımlarını ve sedyenin tekerleklerini yutar."
-    else:
-        $ stress(12)
-        $ sfx("growl")
-        narrator "Sedyenin tekerlekleri zeminde çığlık atar. Nöbetçi döner."
-        narrator "Ağır gövdesi dar koridorda yavaş dönüyor. Bu, onlara birkaç saniye kazandırır."
-
-    k "Mekanik sürgüyü kapatın."
-    call screen qte("Güvenlik paneli — sürgüyü indir!", [("Şimdi!", "simdi")], 3.0, "gec")
+    k "Panellerdeki mekanik sürgüler. Geçtiğiniz yolu kapatın."
+    $ bgm(None, 1.0)
+    call explore("tahliye")
+    scene bg b3_exit with dissolve
     $ sfx("door_slam")
-    if _return == "simdi":
-        m "Şimdi!"
-        narrator "Panel tam zamanında iner. Arkasında metal inliyor."
-    else:
-        $ stress(10)
-        narrator "Panel bir saniye geç iner. Bir pençe aralıktan uzanır, sonra geri çekilir."
+    show deniz at sil_left
+    show mert at sil_center
+    show aras at sil_right
+    with dissolve
     narrator "Kapılar onu sonsuza kadar durdurmaz. Yalnızca dışarı çıkacak zaman kazandırır."
 
     ## 7. 06.28–06.39 — Son nöbet ----------------------------------------------

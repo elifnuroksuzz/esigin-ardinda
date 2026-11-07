@@ -128,6 +128,8 @@ init -2 python:
         ("tam_defter", "Tam Defter", "Defterdeki bütün girdileri bul."),
         ("son_atis", "Son Atış", "Nöbetçi'yi Rezonans Kesici ile durdur."),
         ("eski_hat", "Eski Hat", "Nöbetçi'yi acil bastırma hattıyla durdur."),
+        ("golge", "Gölge", "Bir keşfi hiç fark edilmeden ★★★ ile bitir."),
+        ("stratejist", "Stratejist", "Bütün keşiflerde ★★★ al."),
         ("esik", "Eşiğin Ardında", "Oyunu bitir."),
     ]
     for _aid, _an, _ad in ACHIEVEMENTS:
@@ -212,7 +214,7 @@ screen content_warning():
         yalign 0.45
         spacing 26
         xsize 760
-        text "İÇERİK UYARISI" size 18 color "#c2302f" kerning 6 xalign 0.5
+        text "İÇERİK UYARISI" font "fonts/Oswald-Medium.ttf" size 20 color "#c2302f" kerning 10 xalign 0.5
         text "Bu oyun korku öğeleri, ani sesler, karanlık ortamlar, ölüm ve yas temaları içerir.":
             size 22 color "#cfc9bd" xalign 0.5 text_align 0.5
         null height 10
@@ -232,7 +234,7 @@ screen difficulty():
         xalign 0.5
         yalign 0.45
         spacing 22
-        text "NASIL OYNAMAK İSTERSİN?" size 30 color "#e6e2da" xalign 0.5 kerning 3
+        text "NASIL OYNAMAK İSTERSİN?" font "fonts/Oswald-Medium.ttf" size 34 color "#e6e2da" xalign 0.5 kerning 6
         null height 10
         button:
             xsize 720
@@ -244,7 +246,7 @@ screen difficulty():
             action Return("gerilim")
             vbox:
                 spacing 6
-                text "GERİLİM" size 26 color "#c8a24a"
+                text "GERİLİM" font "fonts/Oswald-SemiBold.ttf" size 28 kerning 4 color "#c8a24a"
                 text "Önerilen deneyim. Zamanlı seçimler kısa, panik kararların bedeli ağır." size 17 color "#cfc9bd"
         button:
             xsize 720
@@ -256,7 +258,7 @@ screen difficulty():
             action Return("hikaye")
             vbox:
                 spacing 6
-                text "HİKÂYE" size 26 color "#6fa8dc"
+                text "HİKÂYE" font "fonts/Oswald-SemiBold.ttf" size 28 kerning 4 color "#6fa8dc"
                 text "Hikâyeye odaklan. Zamanlı seçimlerde iki kat süre, gerginlik yavaş artar." size 17 color "#cfc9bd"
         null height 6
         text "Ayarlar'dan istediğin zaman değiştirebilirsin." size 15 color "#666" xalign 0.5
@@ -277,7 +279,7 @@ screen tip_card(title, body):
         vbox:
             spacing 14
             text "İPUCU" size 13 color "#8a857c" kerning 4
-            text title size 26 color "#c8a24a"
+            text title font "fonts/Oswald-Medium.ttf" size 28 kerning 2 color "#c8a24a"
             text body size 19 color "#cfc9bd"
             null height 6
             textbutton _("Anladım"):
@@ -307,8 +309,8 @@ screen chapter_summary(num, title, yeni_not, yeni_kanit, kanma):
         xalign 0.5
         yalign 0.42
         spacing 10
-        text "BÖLÜM [num] TAMAMLANDI" size 18 color "#c8a24a" kerning 6 xalign 0.5
-        text "[title]" size 52 color "#e6e2da" font "DejaVuSans-Bold.ttf" xalign 0.5
+        text "BÖLÜM [num] TAMAMLANDI" font "fonts/Oswald-Medium.ttf" size 20 color "#c8a24a" kerning 8 xalign 0.5
+        text "[title]" size 64 color "#e6e2da" font "fonts/Oswald-SemiBold.ttf" kerning 10 xalign 0.5
         null height 30
         grid 4 1:
             xalign 0.5
