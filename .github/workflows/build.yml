@@ -1,0 +1,111 @@
+name: Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  # Önce bu sürüm denenir; indirilemezse yedek sürüme düşülür.
+  RENPY_VERSIONS: "8.5.2 8.4.1 8.3.7"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Statik hikâye kontrolü
+        run: python3 tools/check_story.py
+
+      - name: Ren'Py SDK indir
+        run: |
+          set -e
+          for V in $RENPY_VERSIONS; do
+            echo "Ren'Py $V deneniyor…"
+            if curl -fsSL -o sdk.tar.bz2 "https://www.renpy.org/dl/$V/renpy-$V-sdk.tar.bz2"; then
+              tar -xjf sdk.tar.bz2
+              mv "renpy-$V-sdk" renpy-sdk
+              if curl -fsSL -o web.zip "https://www.renpy.org/dl/$V/renpy-$V-web.zip"; then
+                unzip -q web.zip -d renpy-sdk
+              fi
+              echo "RENPY_VERSION=$V" >> "$GITHUB_ENV"
+              exit 0
+            fi
+          done
+          echo "Ren'Py SDK indirilemedi" && exit 1
+
+      - name: Ren'Py lint
+        env:
+          SDL_AUDIODRIVER: dummy
+          SDL_VIDEODRIVER: dummy
+        run: |
+          ./renpy-sdk/renpy.sh "$GITHUB_WORKSPACE" lint lint.txt || true
+          cat lint.txt
+          if grep -E "^game/.*rpy:[0-9]+ " lint.txt; then
+            echo "::error::Lint hataları bulundu"; exit 1
+          fi
+
+      - name: Masaüstü paketleri (PC/Linux + Mac)
+        env:
+          SDL_AUDIODRIVER: dummy
+          SDL_VIDEODRIVER: dummy
+        run: |
+          mkdir -p dist
+          ./renpy-sdk/renpy.sh launcher distribute "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/dist" --package pc --package mac
+          ls -la dist
+
+      - name: Web paketi
+        env:
+          SDL_AUDIODRIVER: dummy
+          SDL_VIDEODRIVER: dummy
+        run: |
+          if [ -d renpy-sdk/web ]; then
+            ./renpy-sdk/renpy.sh launcher web_build "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/web-build"
+            ls -la web-build
+          else
+            echo "Web desteği bu SDK sürümünde bulunamadı; atlandı."
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EsiginArdinda-pc
+          path: dist/*-pc.zip
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EsiginArdinda-mac
+          path: dist/*-mac.zip
+          if-no-files-found: warn
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EsiginArdinda-web
+          path: web-build
+          if-no-files-found: warn
+
+      - name: Pages için hazırla
+        if: vars.ENABLE_PAGES == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web-build
+
+  # İsteğe bağlı: Settings → Pages → Source: GitHub Actions, ve
+  # Settings → Variables → ENABLE_PAGES = true yapınca tarayıcıda oynanır.
+  pages:
+    needs: build
+    if: vars.ENABLE_PAGES == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
