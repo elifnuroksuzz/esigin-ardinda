@@ -142,7 +142,7 @@ screen qte(prompt, options, seconds=5.0, timeout=None):
 
     ## Otomatik test (config.auto_choice_delay) sırasında rastgele seçim yapar.
     if config.auto_choice_delay is not None:
-        timer (config.auto_choice_delay + 0.2) action Return(renpy.random.choice(options)[1])
+        timer ((config.auto_choice_delay or 0.0) + 0.2) action Return(renpy.random.choice(options)[1])
 
     add Solid("#1a000055")
 
