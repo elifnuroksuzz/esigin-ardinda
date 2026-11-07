@@ -30,6 +30,8 @@ init -2 python:
         return sec * (2.0 if persistent.qte_relaxed else 1.0)
 
 
+default autotest_mode = False
+
 ## Bölüm kartı ################################################################
 
 screen chapter_card(num, title, sub):
@@ -140,9 +142,9 @@ screen qte(prompt, options, seconds=5.0, timeout=None):
 
     timer 0.05 repeat True action If(remaining > 0.05, SetScreenVariable("remaining", remaining - 0.05), Return(timeout))
 
-    ## Otomatik test (config.auto_choice_delay) sırasında rastgele seçim yapar.
-    if config.auto_choice_delay is not None:
-        timer ((config.auto_choice_delay or 0.0) + 0.2) action Return(renpy.random.choice(options)[1])
+    ## Yalnızca otomatik testte (autotest_mode) rastgele seçim yapar.
+    if autotest_mode:
+        timer 0.25 action Return(renpy.random.choice(options)[1])
 
     add Solid("#1a000055")
 

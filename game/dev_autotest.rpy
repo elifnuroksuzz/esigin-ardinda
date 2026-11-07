@@ -27,6 +27,7 @@ label splashscreen:
             renpy.config.skipping = "fast" if os.environ.get("ESIK_FAST") == "1" else True
     if os.environ.get("ESIK_AUTOTEST"):
         $ suppress_overlay = False
+        $ autotest_mode = True
         $ _game_menu_screen = "save"
         call start
         $ print("AUTOTEST_DONE notes=%d kanit=%d gerginlik=%d mermi=%d rezonans=%d final=%s" % (len(notes), len(kanit), gerginlik, mermi, rezonans, final_yontem))
