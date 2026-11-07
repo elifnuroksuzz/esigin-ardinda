@@ -27,6 +27,7 @@ jobs:
       - name: Ren'Py SDK indir
         run: |
           set -e
+          cd "$RUNNER_TEMP"
           for V in $RENPY_VERSIONS; do
             echo "Ren'Py $V deneniyor…"
             if curl -fsSL -o sdk.tar.bz2 "https://www.renpy.org/dl/$V/renpy-$V-sdk.tar.bz2"; then
@@ -36,6 +37,7 @@ jobs:
                 unzip -q web.zip -d renpy-sdk
               fi
               echo "RENPY_VERSION=$V" >> "$GITHUB_ENV"
+              echo "SDK=$RUNNER_TEMP/renpy-sdk" >> "$GITHUB_ENV"
               exit 0
             fi
           done
@@ -46,7 +48,7 @@ jobs:
           SDL_AUDIODRIVER: dummy
           SDL_VIDEODRIVER: dummy
         run: |
-          ./renpy-sdk/renpy.sh "$GITHUB_WORKSPACE" lint lint.txt || true
+          "$SDK/renpy.sh" "$GITHUB_WORKSPACE" lint lint.txt || true
           cat lint.txt
           if grep -E "^game/.*rpy:[0-9]+ " lint.txt; then
             echo "::error::Lint hataları bulundu"; exit 1
@@ -58,7 +60,7 @@ jobs:
           SDL_VIDEODRIVER: dummy
         run: |
           mkdir -p dist
-          cd renpy-sdk && ./renpy.sh launcher distribute "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/dist" --package pc --package mac
+          cd "$SDK" && ./renpy.sh launcher distribute "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/dist" --package pc --package mac
           ls -la "$GITHUB_WORKSPACE/dist"
 
       - name: Web paketi
@@ -66,8 +68,8 @@ jobs:
           SDL_AUDIODRIVER: dummy
           SDL_VIDEODRIVER: dummy
         run: |
-          if [ -d renpy-sdk/web ]; then
-            (cd renpy-sdk && ./renpy.sh launcher web_build "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/web-build")
+          if [ -d "$SDK/web" ]; then
+            (cd "$SDK" && ./renpy.sh launcher web_build "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/web-build")
             ls -la web-build
           else
             echo "Web desteği bu SDK sürümünde bulunamadı; atlandı."

@@ -66,6 +66,10 @@ init python:
     build.classify('tools/**', None)
     build.classify('.github/**', None)
     build.classify('README.md', None)
+    build.classify('lint.txt', None)
+    build.classify('renpy-sdk/**', None)
+    build.classify('*.zip', None)
+    build.classify('*.tar.bz2', None)
     build.classify('game/dev_autotest.rpy*', None)
 
     build.documentation('*.txt')
