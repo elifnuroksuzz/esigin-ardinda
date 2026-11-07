@@ -19,6 +19,7 @@ label ch08:
     narrator "Duvardaki yönlendirme tabelası okunaklı. Her katın bir rengi var:"
     narrator "{color=#e8eef8}B1 — YÖNETİM{/color}   ·   {color=#6ab0e0}B2 — ARAŞTIRMA{/color}   ·   {color=#c8a24a}B3 — BAKIM{/color}   ·   {color=#d04030}ARA KAT D — KARANTİNA{/color}   ·   {color=#8070c0}Z0 — MERKEZ{/color}"
     $ add_note("katlar")
+    call tip("hud", "Hayatta kalma göstergesi", "Sağ üstte {b}fener pili{/b}, {b}mermi{/b}, {b}ilk yardım{/b} ve {b}nabız{/b} var. Karanlık bölümler pili tüketir. Nabız yükseldikçe algın bozulur; 70'in üstünde kalbini duyarsın.")
     $ drain_pil(5)
 
     ## 2. Eski güvenlik --------------------------------------------------------

@@ -27,7 +27,7 @@ init -2 python:
         return "ch%02d" % n
 
     def qte_time(sec):
-        return sec * (2.0 if persistent.qte_relaxed else 1.0)
+        return sec * (2.0 if (persistent.qte_relaxed or store.zorluk == "hikaye") else 1.0)
 
 
 default autotest_mode = False
@@ -62,14 +62,21 @@ label chapter_intro(num):
     $ chap_info = CHAPTERS[num - 1]
     $ current_chapter = num
     $ persistent.max_chapter = max(persistent.max_chapter, num)
-    $ stress(-15)
+    $ stress(-25)
+    $ chapter_notes_start = len(notes)
+    $ chapter_kanit_start = len(kanit)
+    $ chapter_kanma_start = sahte_kanma
+    $ save_name = "Bölüm %02d — %s" % (num, chap_info[1])
+    $ apply_camera()
     $ silence(1.0)
     window hide
     scene black with Dissolve(1.0)
     $ sfx("sting")
+    $ quick_menu = False
     show screen chapter_card(str(num).zfill(2), chap_info[1], chap_info[2]) with Dissolve(0.8)
     $ renpy.pause(3.2)
     hide screen chapter_card with Dissolve(0.8)
+    $ quick_menu = True
     return
 
 
@@ -121,8 +128,6 @@ screen hud():
                         right_bar Solid("#2a2620")
 
     ## Yüksek gerginlikte ekran kenarları kızarır
-    if gerginlik >= 60 and not main_menu:
-        add Solid("#4a000018")
 
 init python:
     config.overlay_screens.append("hud")
@@ -140,7 +145,7 @@ screen qte(prompt, options, seconds=5.0, timeout=None):
     default total = qte_time(seconds)
     default remaining = qte_time(seconds)
 
-    timer 0.05 repeat True action If(remaining > 0.05, SetScreenVariable("remaining", remaining - 0.05), Return(timeout))
+    timer 0.05 repeat True action If(remaining > 0.05, SetScreenVariable("remaining", remaining - 0.05), [SetVariable("qte_kacan", qte_kacan + 1), Return(timeout)])
 
     ## Yalnızca otomatik testte (autotest_mode) rastgele seçim yapar.
     if autotest_mode:

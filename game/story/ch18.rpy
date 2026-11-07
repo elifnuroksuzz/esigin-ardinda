@@ -260,6 +260,10 @@ label .anahtar:
         $ flash("#a090ff")
         narrator "Tek seferlik manuel test. Hava bir an kulakları tıkayacak kadar yoğunlaşır."
 
+    if final_yontem == "rezonans":
+        $ unlock("son_atis")
+    else:
+        $ unlock("eski_hat")
     a "Rezonans kesildi! Göğsündeki yarık açıldı!"
     m "Şimdi, Aras!"
     $ sfx("gunshot")
@@ -381,6 +385,7 @@ label .anahtar:
     narrator "Bu kez kimse ondan kaçmaz."
 
     $ renpy.pause(2.0)
+    call final_achievements
     scene black with long_fade
     call screen credits
     jump .post_credits

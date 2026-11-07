@@ -111,6 +111,15 @@ yere yerleştirildi; tekrar eden metin oyuncuyu yorar.
 - [x] Ren'Py lint: 0 hata (991 diyalog bloğu, 30 seçim)
 - [x] Otomatik oynanış: rastgele seçimlerle 18 bölüm baştan sona, birden çok tur, çalışma zamanı hatası yok
 
+### Faz 2.5 — Profesyonel cila ✅
+- [x] İçerik uyarısı + kulaklık önerisi, zorluk seçimi (Gerilim / Hikâye)
+- [x] Konuşan karakter vurgusu, "devam" göstergesi, film greni, vinyet, nefes alan kamera
+- [x] Nabız geri bildirimi (kalp atışı, kırmızı hale)
+- [x] Bölüm sonu özet kartı, otomatik kayıt, kayıt yuvasında bölüm adı, ana menüde "Devam Et"
+- [x] 11 başarım ve başarım ekranı
+- [x] İlk karşılaşmada ipucu kartları (defter, YANKI, zamanlı seçim, HUD)
+- [x] Normal mod duman testi (gerçek tıklamalarla) + otomatik oynanış testi
+
 ### Faz 3 — Cila (senin sıradaki adımların)
 - [ ] Arka planları AI/foto ile değiştir (aynı dosya adlarıyla `game/images/bg/` içine koy — kod değişmez)
 - [ ] freesound.org'dan gerçek kayıtlarla sesleri güçlendir (aynı dosya adları)

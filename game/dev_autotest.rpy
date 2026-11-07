@@ -17,7 +17,7 @@ init 999 python:
                 renpy.screenshot(os.path.join(_shot_dir, "shot_%04d.png" % _shot_n[0]))
         config.start_interact_callbacks.append(_shot)
 
-label splashscreen:
+label autotest_run:
     python:
         import os
         if os.environ.get("ESIK_AUTOTEST"):

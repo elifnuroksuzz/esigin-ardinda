@@ -31,6 +31,7 @@ label ch09:
             m "Güzel çizmiş."
             h "Sabah götürecektim. Hâlâ götüreceğim."
             $ add_note("hakan_ailesi")
+            $ unlock("bir_resim")
         "Sessiz kal, çizime bakmaya devam et.":
             narrator "Mert bir şey sormaz. Ama gözleri bir süre o üç figürde kalır."
             narrator "Hakan bunu fark eder. Kâğıdı dikkatlice katlar ve göğüs cebine koyar."

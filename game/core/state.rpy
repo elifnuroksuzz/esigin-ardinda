@@ -82,7 +82,7 @@ init -3 python:
     def add_note(nid):
         if nid not in notes:
             notes.append(nid)
-            renpy.notify("Deftere eklendi: " + JOURNAL[nid][0])
+            renpy.notify("Deftere eklendi: " + JOURNAL[nid][0] + "   ·   J")
             renpy.sound.play("audio/sfx/notify.ogg", channel="audio")
 
     def add_evidence(eid):
@@ -93,7 +93,10 @@ init -3 python:
 
     def stress(n):
         global gerginlik
+        if n > 0 and store.zorluk == "hikaye":
+            n = max(1, n // 2)
         gerginlik = max(0, min(100, gerginlik + n))
+        update_pulse()
 
     def drain_pil(n):
         global pil

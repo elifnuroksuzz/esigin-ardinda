@@ -20,6 +20,7 @@ label ch06:
     $ sfx("thud")
     $ jolt(True)
     m "Tavan çöküyor!"
+    call tip("qte", "Zamanlı seçim", "Kırmızı çubuklu seçimlerde süre sınırlıdır. Süre biterse karar senin yerine verilir; çoğu zaman iyi bir karar olmaz.")
 
     call screen qte("Tavan içeri göçüyor!", [("Motoru çalıştır, kaç", "motor"), ("Kıpırdama, sessiz kal", "sessiz"), ("Kapıyı aç, dışarı fırla", "kapi")], 4.0, "panik")
     if _return == "sessiz":

@@ -34,6 +34,7 @@ label .gecit:
                 $ add_note("pervane")
             elif _return == "ates":
                 if use_bullet():
+                    $ kirpinti_vuruldu += 1
                     $ sfx("gunshot")
                     narrator "Bir tanesi düşer. Diğerleri silah sesine doğru, yani ona doğru gelir. Mert koşar."
                     $ stress(8)
@@ -46,6 +47,7 @@ label .gecit:
         "Ateş ederek temizle.":
             if mermi >= 2:
                 $ mermi -= 2
+                $ kirpinti_vuruldu += 2
                 $ sfx("gunshot")
                 narrator "İki atış. İki Kırpıntı. Ötekiler kaçar. Kulakları çınlıyor; mermiler azaldı."
             else:

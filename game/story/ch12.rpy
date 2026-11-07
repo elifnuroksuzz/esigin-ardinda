@@ -24,6 +24,7 @@ label ch12:
             m "Ben başımı çevirdim… o sonra çevirdi."
             $ taklitci_ipucu = True
             $ add_note("gozlemci")
+            $ unlock("gozlemci")
         "Bakma. Yürümeye devam et.":
             narrator "Mert gözünü cama çevirmeden yürür. Ensesinde bir bakış hisseder."
             $ stress(6)

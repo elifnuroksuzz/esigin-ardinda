@@ -6,11 +6,21 @@
 
 label start:
     $ chapter_cursor = 1
+    if autotest_mode:
+        $ zorluk = "gerilim"
+    else:
+        scene black
+        $ quick_menu = False
+        call screen difficulty
+        $ zorluk = _return
+        $ quick_menu = True
     jump main_flow
 
 label main_flow:
     while chapter_cursor <= len(CHAPTERS):
         call expression chapter_label(chapter_cursor)
+        if chapter_cursor < len(CHAPTERS):
+            call chapter_outro(chapter_cursor)
         $ chapter_cursor += 1
     $ persistent.completed = True
     return

@@ -51,6 +51,15 @@ Komut satırından:
 - **Duyduğun her sese güvenme.** Tekrar eden nefes, gecikme ve yön değişimi YANKI'nın işaretidir.
 - Hata yapmak oyunu bitirmez; bir bedeli olur ya da yeniden denersin.
 - Bir bölüme ulaştıktan sonra ana menüde **Bölüm Seç** açılır.
+- Yeni oyunda **Gerilim** (önerilen) veya **Hikâye** (2× süre, yavaş gerginlik) modu seçilir.
+- Her bölüm sonunda özet kartı ve otomatik kayıt; ana menüde **Devam Et**.
+- **11 başarım** (ana menü → Başarımlar). Bazıları gizli yetenek ister: hiç YANKI'ya kanmamak,
+  hiçbir zamanlı seçimi kaçırmamak, Kırpıntı'ları mermi harcamadan atlatmak…
+
+### Sunum
+- Konuşan karakter aydınlanır, diğerleri gölgede kalır.
+- Film greni, vinyet ve hafifçe "nefes alan" kamera (Ayarlar → Görüntü'den kapatılabilir).
+- Nabız 70'i geçince kalp atışı duyulur, 75'te ekran kenarları kızarır.
 
 ---
 

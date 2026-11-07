@@ -59,19 +59,71 @@ define kirp = Character("Kırpıntı", color="#5a6066", what_italic=True, what_c
 
 ## Silüet görselleri ##########################################################
 
-image mert = "images/char/mert.png"
-image aras = "images/char/aras.png"
-image deniz = "images/char/deniz.png"
-image kemal = "images/char/kemal.png"
-image hakan = "images/char/hakan.png"
-image adrian = "images/char/adrian.png"
-image duru = "images/char/duru.png"
-image idil = "images/char/idil.png"
-image riza = "images/char/riza.png"
-image bora = "images/char/bora.png"
-image kaan = "images/char/kaan.png"
-image elif = "images/char/elif.png"
-image emir = "images/char/emir.png"
+image mert:
+    "images/char/mert.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image mert speaking = "images/char/mert.png"
+image aras:
+    "images/char/aras.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image aras speaking = "images/char/aras.png"
+image deniz:
+    "images/char/deniz.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image deniz speaking = "images/char/deniz.png"
+image kemal:
+    "images/char/kemal.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image kemal speaking = "images/char/kemal.png"
+image hakan:
+    "images/char/hakan.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image hakan speaking = "images/char/hakan.png"
+image adrian:
+    "images/char/adrian.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image adrian speaking = "images/char/adrian.png"
+image duru:
+    "images/char/duru.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image duru speaking = "images/char/duru.png"
+image idil:
+    "images/char/idil.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image idil speaking = "images/char/idil.png"
+image riza:
+    "images/char/riza.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image riza speaking = "images/char/riza.png"
+image bora:
+    "images/char/bora.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image bora speaking = "images/char/bora.png"
+image kaan:
+    "images/char/kaan.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image kaan speaking = "images/char/kaan.png"
+image elif:
+    "images/char/elif.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image elif speaking = "images/char/elif.png"
+image emir:
+    "images/char/emir.png"
+    matrixcolor BrightnessMatrix(-0.08) * SaturationMatrix(0.6)
+    alpha 0.82
+image emir speaking = "images/char/emir.png"
 
 image nobetci = "images/char/nobetci.png"
 image surungen = "images/char/surungen.png"

@@ -594,7 +594,7 @@ CHARS = {
     "deniz": (0.88, 0.86, "short", "#e0e0e0", "hood"),
     "duru": (0.94, 0.88, "long", "#d58aa0", None),
     "idil": (0.95, 0.88, "pony", "#b0a0e0", None),
-    "kemal": (1.0, 1.06, "bald", "#9ec0a0", "glasses"),
+    "kemal": (1.0, 1.06, "bald", "#9ec0a0", "collar"),
     "adrian": (1.04, 1.1, "slick", "#d04a3a", "collar"),
     "hakan": (1.05, 1.18, "cap", "#7aa0c0", None),
     "riza": (0.97, 1.0, "bald", "#a09070", "beard"),
@@ -746,6 +746,28 @@ def gen_chars():
     os.makedirs(os.path.join(GAME, "gui", "button"), exist_ok=True)
     Image.new("RGBA", (8, 8), (0, 0, 0, 0)).save(os.path.join(GAME, "gui", "button", "background.png"))
     print("  fog + icon")
+
+
+def gen_overlays():
+    """Film greni kareleri ve vinyet katmanları (sinematik görünüm)."""
+    d = os.path.join(GAME, "images", "fx")
+    os.makedirs(d, exist_ok=True)
+    gw, gh = 640, 360
+    for i in range(4):
+        r = np.random.default_rng(500 + i)
+        n = r.normal(128, 60, (gh, gw))
+        a = np.clip(np.abs(n - 128) * 1.4, 0, 255)
+        g = np.clip(n, 0, 255)
+        rgba = np.dstack([g, g, g, a]).astype(np.uint8)
+        Image.fromarray(rgba, "RGBA").save(os.path.join(d, "grain%d.png" % i))
+    y, x = np.mgrid[0:H, 0:W]
+    dd = np.sqrt(((x - W / 2) / (W / 2)) ** 2 + ((y - H / 2) / (H / 2)) ** 2) / math.sqrt(2)
+    a = np.clip((dd - 0.35) / 0.65, 0, 1) ** 1.8 * 235
+    z = np.zeros((H, W))
+    Image.fromarray(np.dstack([z, z, z, a]).astype(np.uint8), "RGBA").save(os.path.join(d, "vignette.png"))
+    a2 = np.clip((dd - 0.25) / 0.75, 0, 1) ** 1.4 * 255
+    Image.fromarray(np.dstack([z + 140, z, z, a2]).astype(np.uint8), "RGBA").save(os.path.join(d, "vignette_red.png"))
+    print("  fx grain + vignette")
 
 
 # =============================================================================
@@ -1150,6 +1172,7 @@ def main():
     if a.only in (None, "char"):
         print("Silüetler…")
         gen_chars()
+        gen_overlays()
     if a.only in (None, "audio"):
         print("Sesler…")
         gen_audio()

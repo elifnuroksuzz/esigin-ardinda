@@ -247,6 +247,8 @@ screen navigation():
         spacing gui.navigation_spacing
 
         if main_menu:
+            if renpy.newest_slot() is not None:
+                textbutton _("Devam Et") action FileLoad(renpy.newest_slot(), slot=True)
             textbutton _("Yeni Oyun") action Start()
             if persistent.max_chapter > 1:
                 textbutton _("Bölüm Seç") action ShowMenu("chapter_select")
@@ -263,6 +265,7 @@ screen navigation():
         elif not main_menu:
             textbutton _("Ana Menü") action MainMenu()
 
+        textbutton _("Başarımlar") action ShowMenu("achievements")
         textbutton _("Hakkında") action ShowMenu("about")
         textbutton _("Yardım") action ShowMenu("help")
 
@@ -584,6 +587,14 @@ screen preferences():
                     textbutton _("Ekran sarsıntısı") action ToggleField(persistent, "allow_shake")
                     textbutton _("Yanıp sönme") action ToggleField(persistent, "allow_flash")
                     textbutton _("Zamanlı seçimde 2× süre") action ToggleField(persistent, "qte_relaxed")
+
+                vbox:
+                    style_prefix "check"
+                    label _("Görüntü")
+                    textbutton _("Film greni") action ToggleField(persistent, "grain")
+                    textbutton _("Nefes alan kamera") action [ToggleField(persistent, "camera_drift"), Function(apply_camera)]
+                    if not main_menu:
+                        textbutton _("Hikâye modu") action ToggleVariable("zorluk", "hikaye", "gerilim")
 
             null height (4 * gui.pref_spacing)
 

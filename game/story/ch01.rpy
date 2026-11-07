@@ -23,6 +23,7 @@ label ch01:
     hide phone_wave
     with Dissolve(0.3)
     $ add_note("sesli_mesaj")
+    call tip("defter", "Defter", "Önemli bir şey öğrendiğinde deftere yazılır. İstediğin an {b}J{/b} tuşuyla ya da alttaki {b}Defter{/b} düğmesiyle aç. Bulmacalarda işine yarar.")
 
     narrator "Polis telefonu ertesi sabah buldu. Deniz'i bulamadı."
 
@@ -96,6 +97,7 @@ label ch01:
     $ sfx("echo_voice")
     dz_fake "Abi?"
     with hpunch
+    call tip("yanki", "Sahte sesler", "Soluk ve italik konuşan isimler {b}YANKI{/b} taklitleridir. Aynı nefesle tekrar eden cümleye, gecikmeye ve yön değiştiren sese dikkat et.")
     m "Deniz? Beni duyuyor musun?"
 
     menu:

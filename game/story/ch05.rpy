@@ -71,6 +71,7 @@ label .dongu:
             jump .uzun
 
 label .kisa:
+    call tip("qte", "Zamanlı seçim", "Kırmızı çubuklu seçimlerde süre sınırlıdır. Süre biterse karar senin yerine verilir; çoğu zaman iyi bir karar olmaz.")
     narrator "Patika açık. Ağaçlar seyrek. Sis yerden diz boyu yükseliyor."
     $ sfx("crawl")
     narrator "Sağdan, çalıların arasından bir şey yaklaşıyor. Hızlı. Çok ayaklı bir şeyin tıkırtısı."

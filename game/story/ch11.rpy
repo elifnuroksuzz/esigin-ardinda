@@ -63,6 +63,7 @@ label ch11:
         if use_bullet():
             $ sfx("gunshot")
             $ flash("#fff4d0")
+            $ kirpinti_vuruldu += 1
             narrator "Tek atış. Küçük gövde yere yığılır. Kulakları çınlıyor."
             narrator "Silah sesi koridorlarda yankılanır. Uzakta bir şey bu sesi duymuştur."
             $ stress(5)
