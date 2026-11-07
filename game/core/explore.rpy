@@ -16,6 +16,9 @@ default ex_result = None
 default ex_hud_prev = False
 default persistent.map_stars = {}
 
+init -4 python:
+    renpy.music.register_channel("tracker", mixer="sfx", loop=True)
+
 init -1 python:
 
     import collections
@@ -55,6 +58,24 @@ init -1 python:
 
     def ex_map():
         return MAPS[ex["id"]]
+
+    def ex_max_hp():
+        return MAX_HEALTH + (1 if zorluk == "hikaye" else 0) - (1 if zorluk == "kabus" else 0)
+
+    def ex_nearest():
+        """En yakın canlı tehdidin oda uzaklığı (dedektör için)."""
+        ds = [ex_dist(ex["room"], t["room"]) for t in ex["threats"] if t["alive"]]
+        return min(ds) if ds else 99
+
+    def ex_tracker():
+        d = ex_nearest()
+        f = {1: "tracker_fast", 2: "tracker_med", 3: "tracker_slow"}.get(d)
+        if d == 0:
+            f = "tracker_fast"
+        if f:
+            renpy.music.play("audio/sfx/%s.ogg" % f, channel="tracker", loop=True, if_changed=True)
+        else:
+            renpy.music.stop(channel="tracker", fadeout=0.5)
 
     def ex_pos(M, rid):
         """Harita koordinatını sağ panelin solundaki alana sığdırır."""
@@ -119,7 +140,7 @@ init -1 python:
         snap = ex["snap"] if (retry and ex) else ex_snapshot()
         if retry:
             ex_restore(snap)
-        saglik = MAX_HEALTH + (1 if zorluk == "hikaye" else 0)
+        saglik = ex_max_hp()
         threats = []
         for t in M.get("threats", []):
             threats.append(dict(type=t["type"], room=t["start"], target=t.get("hunt"),
@@ -128,7 +149,7 @@ init -1 python:
         ex = dict(id=mid, room=M["start"], prev=None, turn=0, noise_total=0, damage=0,
                   hidden=False, log=[], threats=threats, searched=[], flags=[], visited=[M["start"]],
                   blocked={}, lure={}, events_done=[], listen=False, pings=[], last_noise=None,
-                  fails=fails, snap=snap, detected=False, run=False, hit=False)
+                  fails=fails, snap=snap, detected=False, run=False, hit=False, newdoc=None)
         ex_log(M.get("intro_log", "Keşif başladı."))
 
     def ex_machine_on(room):
@@ -182,7 +203,7 @@ init -1 python:
 
     def ex_unsearched_here():
         r = ex_map()["rooms"][ex["room"]]
-        return ex["room"] not in ex["searched"] and (r.get("loot") or r.get("clue"))
+        return ex["room"] not in ex["searched"] and (r.get("loot") or r.get("clue") or r.get("doc"))
 
     ## --- Tur ------------------------------------------------------------------
 
@@ -194,6 +215,8 @@ init -1 python:
         ex["hidden"] = False
         ex["listen"] = False
         ex["hit"] = False
+        ex["newdoc"] = None
+        store.st_turns += 1
         here = ex["room"]
 
         def make_noise(room, lvl, t="sound"):
@@ -210,7 +233,7 @@ init -1 python:
             ex["prev"] = here
             ex["room"] = dest
             make_noise(dest, ACTION_NOISE["move"])
-            renpy.sound.play("audio/sfx/footsteps.ogg", channel="audio")
+            sfx("footsteps")
         elif kind == "run":
             dest = action[1]
             path = ex_path(here, dest)
@@ -221,15 +244,17 @@ init -1 python:
                     ex["visited"].append(r)
             ex["room"] = dest
             stress(4)
-            renpy.sound.play("audio/sfx/footsteps.ogg", channel="audio")
+            sfx("footsteps")
             ex_log("Koştun. Adımların koridorlarda yankılandı.")
         elif kind == "listen":
             ex["listen"] = True
+            store.st_listens += 1
             ex_log("Nefesini tuttun ve dinledin.")
         elif kind == "search":
             pil = max(0, pil - SEARCH_COST)
+            store.st_searches += 1
             noises.append((here, 3, "light"))
-            renpy.sound.play("audio/sfx/flashlight.ogg", channel="audio")
+            sfx("flashlight")
             r = M["rooms"][here]
             if here not in ex["searched"]:
                 ex["searched"].append(here)
@@ -241,20 +266,28 @@ init -1 python:
             if r.get("clue") and r["clue"][0] not in ex["flags"]:
                 ex["flags"].append(r["clue"][0])
                 ex_log(r["clue"][1])
-                renpy.sound.play("audio/sfx/notify.ogg", channel="audio")
+                sfx("notify")
+                found = True
+            if r.get("doc") and ("doc:" + r["doc"]) not in ex["flags"]:
+                ex["flags"].append("doc:" + r["doc"])
+                isnew = find_doc(r["doc"])
+                ex_log("Bir belge buldun: %s" % DOC_INFO[r["doc"]][1].capitalize() if isnew else "Bu belgeyi daha önce okumuştun.")
+                if isnew:
+                    ex["newdoc"] = r["doc"]
                 found = True
             if not found:
                 ex_log("Fener ışığında işe yarar bir şey yok.")
         elif kind == "throw":
             sise -= 1
+            store.st_bottles += 1
             make_noise(action[1], ACTION_NOISE["throw"])
-            renpy.sound.play("audio/sfx/bottle.ogg", channel="audio")
+            sfx("bottle")
             ex_log("Şişe %s yönünde kırıldı." % M["rooms"][action[1]]["name"])
         elif kind == "decoy":
             kaydedici -= 1
             make_noise(action[1], ACTION_NOISE["decoy"])
             ex["lure"][action[1]] = 2
-            renpy.sound.play("audio/sfx/whisper.ogg", channel="audio")
+            sfx("whisper")
             ex_log("Kaydedici %s içinde çalıyor: senin sesin." % M["rooms"][action[1]]["name"])
         elif kind == "hide":
             ex["hidden"] = True
@@ -263,7 +296,8 @@ init -1 python:
             t = ex_shoot_target()
             if mermi > 0:
                 mermi -= 1
-                renpy.sound.play("audio/sfx/gunshot.ogg", channel="audio")
+                store.st_shots += 1
+                sfx("gunshot")
                 make_noise(here, ACTION_NOISE["shoot"])
                 if t is None:
                     ex_log("Karanlığa ateş ettin. Hiçbir şey yok.")
@@ -277,14 +311,14 @@ init -1 python:
         elif kind == "resonance":
             t = ex_shoot_target()
             rezonans -= 1
-            renpy.sound.play("audio/sfx/resonance_shot.ogg", channel="audio")
+            sfx("resonance_shot")
             if t is not None:
                 t["stun"] = 4
                 t["target"] = None
                 ex_log("Rezonans Kesici! %s sarsıldı, birkaç tur hareket edemez." % THREAT_INFO[t["type"]]["name"])
         elif kind == "heal":
             ilkyardim -= 1
-            saglik = min(MAX_HEALTH + (1 if zorluk == "hikaye" else 0), saglik + 1)
+            saglik = min(ex_max_hp(), saglik + 1)
             ex_log("Yarayı sardın. Kendini biraz daha iyi hissediyorsun.")
         elif kind == "battery":
             yedek_pil -= 1
@@ -294,12 +328,12 @@ init -1 python:
             u = M["rooms"][here]["use"]
             if u["type"] == "lure":
                 ex["lure"][here] = u.get("turns", 3)
-                renpy.sound.play("audio/sfx/fan.ogg", channel="audio")
+                sfx("fan")
                 ex_log(u.get("log", "Makine çalışmaya başladı."))
             elif u["type"] == "block":
                 for a, b in u["links"]:
                     ex["blocked"][link_key(a, b)] = u.get("turns", 5)
-                renpy.sound.play("audio/sfx/door_slam.ogg", channel="audio")
+                sfx("door_slam")
                 ex_log(u.get("log", "Sürgüyü indirdin."))
                 make_noise(here, 2)
         elif kind == "wait":
@@ -356,7 +390,7 @@ init -1 python:
         elif item == "kaydedici":
             kaydedici += 1
         ex_log("Buldun: %s." % LOOT_INFO[item][0])
-        renpy.sound.play("audio/sfx/notify.ogg", channel="audio")
+        sfx("notify")
 
     def ex_threats_move(noises):
         global saglik
@@ -371,7 +405,7 @@ init -1 python:
             for room, lvl, kind in noises:
                 if kind == "light" and not info["light"]:
                     continue
-                eff = lvl + info["hear"] + (2 if kind == "light" else 0)
+                eff = lvl + info["hear"] + (2 if kind == "light" else 0) + (1 if zorluk == "kabus" else 0)
                 d = ex_dist(t["room"], room, t["type"])
                 score = eff - d
                 if score >= 1 and (best is None or score > best[0]):
@@ -435,9 +469,10 @@ init -1 python:
             saglik -= info["dmg"]
             ex["damage"] += info["dmg"]
             ex["detected"] = True
-            stress(20)
-            renpy.sound.play("audio/sfx/growl.ogg", channel="audio")
-            ex["hit"] = True
+            stress(12)
+            sfx("growl")
+            ex["hit"] = t["type"]
+            store.st_caught += 1
             if saglik <= 0:
                 return "dead"
             ex_log("%s sana saldırdı! Geri kaçtın." % info["name"])
@@ -457,7 +492,10 @@ init -1 python:
             if 1 <= d <= loud:
                 ex["pings"].append(t["room"])
                 if d == 1:
-                    stress(3)
+                    stress(2)
+        ## Güvende geçen tur nabzı düşürür (gerilim eğrisi)
+        if ex_nearest() >= 3 and not ex["hit"]:
+            stress(-2)
 
     def ex_visible(t):
         """Tehdit oyuncuya görünür mü? Aynı oda, komşu oda + dinleme, ya da 2 oda + dinleme."""
@@ -806,7 +844,7 @@ screen explore_panel(mode):
             hbox:
                 xfill True
                 text ("TUR %d" % ex["turn"]) style "ex_head" size 18 color "#d8d2c6"
-                $ hmax = MAX_HEALTH + (1 if zorluk == "hikaye" else 0)
+                $ hmax = ex_max_hp()
                 hbox:
                     xalign 1.0
                     spacing 3
@@ -824,6 +862,15 @@ screen explore_panel(mode):
                         text "FENER" style "ex_head" min_width 92
                         bar value StaticValue(pil, 100) xsize 150 ysize 6 yalign 0.5 left_bar Solid("#e05040" if pil < 25 else theme) right_bar Solid("#1c2228")
                         text " [pil]%" style "ex_text" size 13
+                    hbox:
+                        $ dn = ex_nearest()
+                        text "DEDEKTÖR" style "ex_head" min_width 92
+                        hbox:
+                            spacing 4
+                            yalign 0.5
+                            for i in range(3):
+                                add Solid(("#ff4a3a" if dn <= 1 else ("#e8a040" if dn == 2 else "#c8b060")) if (4 - max(dn, 1)) > i else "#1c2228", xsize=40, ysize=6)
+                        text ("  ÇOK YAKIN" if dn <= 1 else ("  YAKIN" if dn == 2 else ("  UZAKTA" if dn == 3 else "  SESSİZ"))) style "ex_text" size 12 color "#8a857c"
                     hbox:
                         text "NABIZ" style "ex_head" min_width 92
                         bar value StaticValue(gerginlik, 100) xsize 150 ysize 6 yalign 0.5 left_bar Solid("#c2302f") right_bar Solid("#1c2228")
@@ -872,7 +919,7 @@ screen explore_panel(mode):
                 textbutton "KAYDEDİCİ" style "ex_btn" text_style "ex_btn_text" action SetScreenVariable("mode", "decoy") sensitive (kaydedici > 0) selected (mode == "decoy")
                 textbutton "SAKLAN" style "ex_btn" text_style "ex_btn_text" action Return(("hide",)) sensitive bool(room.get("hide"))
                 textbutton "ATEŞ ET" style "ex_btn" text_style "ex_btn_text" action Return(("shoot",)) sensitive (mermi > 0 and shoot_t is not None)
-                textbutton "İLK YARDIM" style "ex_btn" text_style "ex_btn_text" action Return(("heal",)) sensitive (ilkyardim > 0 and saglik < MAX_HEALTH + (1 if zorluk == "hikaye" else 0))
+                textbutton "İLK YARDIM" style "ex_btn" text_style "ex_btn_text" action Return(("heal",)) sensitive (ilkyardim > 0 and saglik < ex_max_hp())
                 textbutton "PİL TAK" style "ex_btn" text_style "ex_btn_text" action Return(("battery",)) sensitive (yedek_pil > 0 and pil < 70)
                 if room.get("use"):
                     textbutton room["use"]["label"].upper() style "ex_btn" text_style "ex_btn_text" action Return(("use",))
@@ -910,10 +957,10 @@ screen ex_caught():
         text "Bu keşfi baştan dene. Kaynakların keşfin başındaki hâline döner." style "ex_text" size 18 xalign 0.5
         null height 20
         textbutton "TEKRAR DENE" style "ex_btn" text_style "ex_btn_text" xsize 360 xalign 0.5 action Return("retry")
-        if ex["fails"] >= 2 or zorluk == "hikaye":
+        if (ex["fails"] >= 2 or zorluk == "hikaye") and zorluk != "kabus":
             textbutton "KEŞFİ ATLA (hikâyeye devam)" style "ex_btn" text_style "ex_btn_text" xsize 360 xalign 0.5 action Return("skip")
     if autotest_mode:
-        timer 0.05 action Return("skip" if ex["fails"] >= 2 else "retry")
+        timer 0.05 action Return("skip" if (ex["fails"] >= 2 and zorluk != "kabus") or ex["fails"] >= 5 else "retry")
 
 screen ex_win(stars):
     modal True
@@ -968,9 +1015,14 @@ label explore(mid):
         $ amb(MAPS[mid]["amb"])
     call tip("harita", "Keşif haritası", "Her eylem bir {b}tur{/b} harcar; sonra yaratıklar hareket eder. Sarı çerçeveli komşu odaya tıklayarak yürü.\n\n{b}Dinle{/b}: yakındaki yaratıkları ve nereye gittiklerini gösterir.  {b}Ara{/b}: fener pili harcayarak malzeme ve ipucu bulur.\n\nYaratıklar {b}sesle{/b} avlanır. Koşmak ve ateş etmek uzaktan duyulur; şişe atarak onları başka yöne çekebilirsin. Kırmızı {b}?{/b} halkası: bir şey duyuyorsun.")
     while not ex_done:
+        $ ex_tracker()
         call screen explore_map
         $ renpy.block_rollback()
         $ ex_result = ex_act(_return)
+        if ex.get("hit"):
+            call jumpscare(ex["hit"])
+        if ex.get("newdoc"):
+            call screen doc_reader(ex["newdoc"], True)
         if ex_result == "win":
             $ ex_done = True
         elif ex_result == "dead":
@@ -1002,6 +1054,8 @@ label explore(mid):
                 $ ex["flags"].append(ev_flag)
             if MAPS[mid].get("amb"):
                 $ amb(MAPS[mid]["amb"])
+    $ renpy.music.stop(channel="tracker", fadeout=0.5)
+    $ stress(-15)
     $ ex_st = ex_finish() if ex["damage"] < 9 else 0
     call screen ex_win(ex_st)
     $ show_hud = ex_hud_prev

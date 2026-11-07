@@ -38,7 +38,12 @@ label ch12:
     ## 2. 2024 dosyaları -------------------------------------------------------
     scene bg b2_archive with dissolve
     show mert at sil_left with dissolve
-    narrator "Arşiv odası. Klasörler, sabit diskler, laboratuvar defterleri."
+    narrator "Arşiv odası. Elektrik kesik; yalnızca acil ışıklar. Klasörler, sabit diskler, laboratuvar defterleri."
+    window hide
+    $ quick_menu = False
+    call screen flashlight_search("b2_archive", [("denek", "Deney klasörü", "▤", 190, 270), ("kirmizi", "Kırmızı klasör", "▥", 420, 420), ("genelge", "Mühürlü zarf", "✉", 980, 560)], "B2 ARŞİVİ", True)
+    $ quick_menu = True
+    call pil_check
     narrator "2024 tarihli deney kayıtları: {b}DENEK 14{/b} ve {b}DENEK 16{/b}."
     m "Denek on dört… tarih 2024."
     narrator "Bir an nefesi kesilir. Sonra tarihleri, boy ve yaş bilgisini okur."
@@ -60,6 +65,8 @@ label ch12:
     narrator "Arşivin hemen ötesinde kapalı bir tahliye çıkışı. Önünde bırakılmış eşyalar: bir çanta, tek bir ayakkabı, kırık bir kimlik kartı."
     narrator "Zorlanmış bir güvenlik kapısı."
     narrator "Voss'un sorumluluğu yalnızca bir kâğıtta değil. Sonuçlarında da."
+    narrator "Mühürlü zarfın içinde yönetimin imzalı bir genelgesi var."
+    call read_doc("voss_not")
     m "Buradan sağ çıkarsam Kemal'e soracağım."
 
     ## 4. Sahte görüntü --------------------------------------------------------

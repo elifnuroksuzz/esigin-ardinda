@@ -2,7 +2,7 @@
 
 define config.name = _("EŞİĞİN ARDINDA")
 define gui.show_name = True
-define config.version = "1.0.0"
+define config.version = "1.3.0"
 
 define gui.about = _p("""
 Çamlık Kasabası'nda geçen, tek gecelik bir korku/gizem hikâyesi.

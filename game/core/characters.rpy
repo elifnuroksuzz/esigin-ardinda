@@ -8,12 +8,12 @@ init -5 python:
     def echo_callback(event, interact=True, **kwargs):
         """Sahte (YANKI) seslerde, satır başlarken boğuk bir yankı çalar."""
         if event == "show_done":
-            renpy.sound.play("audio/sfx/echo_voice.ogg", channel="audio")
+            sfx("echo_voice")
 
     def radio_callback(event, interact=True, **kwargs):
         """Telsiz / telefon konuşmalarında kısa parazit."""
         if event == "show_done":
-            renpy.sound.play("audio/sfx/radio.ogg", channel="audio")
+            sfx("radio")
 
 define narrator = Character(None, what_color="#cfc9bd")
 define thought = Character(None, what_italic=True, what_color="#a9a295")

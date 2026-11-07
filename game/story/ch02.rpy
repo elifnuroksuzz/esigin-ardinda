@@ -10,8 +10,15 @@ label ch02:
     show aras at sil_right
     show mert at sil_left
     with dissolve
+    narrator "Elektrik yok. Telefonlarının ışığıyla rafları tararlar."
+    window hide
+    $ quick_menu = False
+    call screen flashlight_search("depot", [("kutu", "Ezik metal kutu", "▣", 1000, 560), ("foto", "Solmuş fotoğraf", "▭", 240, 300), ("plan", "Bakım planı", "▤", 610, 470)], "KEMAL'İN DEPOSU")
+    $ quick_menu = True
+    narrator "Solmuş bir fotoğraf: iki adam, yeni açılmış bir tesisin önünde. Arkasında: {i}K. Demir · A. Voss · Açılış{/i}."
+    narrator "Duvardan sökülmüş eski bir bakım planı. Köşesinde beş noktalı, ortası boş bir sembol."
     $ sfx("lock_click")
-    narrator "Aras kutuyu açar. İçinden siyah kapaklı bir defter çıkar. Kapağında elle yazılmış:"
+    narrator "Ve ezik metal kutu. Aras kutuyu açar. İçinden siyah kapaklı bir defter çıkar. Kapağında elle yazılmış:"
     centered "{size=+8}KARA DOSYA — 001{/size}"
     m "Bu defteri kim yazmış?"
     a "Bilmiyorum. Babamın el yazısına da benzemiyor."
@@ -36,21 +43,25 @@ label ch02:
     narrator "Ekranda üç ses parçası var."
 
 label .bulmaca:
-    a "Dinle. Hangisi gerçek Deniz?"
-    menu:
-        "A — Sesli mesaj: 'Abi, eski servis yolundayım.' Rüzgâr var, nefes düzensiz, cümle titrek.":
+    a "Dinle. Ve bak. Hangisi gerçek Deniz?"
+    window hide
+    $ quick_menu = False
+    call screen waveform_puzzle
+    $ quick_menu = True
+    $ dalga = _return
+    if dalga == "A":
             $ sfx("phone_beep")
             a "Rüzgâr sesi mikrofona çarpıyor, nefesi korkudan bölünüyor. Ağaçlardan gelen dalga boyları da çevreyle uyumlu."
             a "Bu gerçek. Bu, Deniz'in kendisi."
             m "…Biliyordum. Ama bunu duymak başka."
-        "B — Ormandaki kayıt: 'Abi?' İki kez. İki dalga birebir aynı.":
+    elif dalga == "B":
             $ stress(5)
             $ sfx("echo_voice")
             a "Üst üste koyuyorum, bak. Tek bir milisaniye bile kaymıyor."
             a "İnsan aynı kelimeyi iki kez aynı şekilde söyleyemez. Bu bir kopya."
             m "Peki gerçek olan hangisi?"
             jump .bulmaca
-        "C — Sesli mesajın sonundaki 'Deniz…' Arkada hiç rüzgâr yok.":
+    else:
             $ stress(5)
             a "Rüzgârın aniden kesildiğini duyuyor musun? Ses başka bir ortamdan alınıp yapıştırılmış gibi."
             a "Bu Deniz'in sesi bile değil. Onun adını söyleyen şey."
@@ -98,3 +109,5 @@ label .bulmaca:
     a "Tesadüf olabilir."
     m "Olabilir. Ama bakmadan bilemeyiz."
     return
+
+default dalga = None

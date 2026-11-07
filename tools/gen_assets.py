@@ -1218,6 +1218,54 @@ def gen_audio():
     write_ogg(norm(loopify(chase), 0.65), "music/chase.ogg")
 
 
+def gen_extras():
+    """Dedektör bipleri, telsiz paraziti, kâğıt dokusu, fener maskesi."""
+    # Dedektör: yaklaştıkça hızlanan bip döngüleri
+    for name, gap in (("tracker_slow", 1.6), ("tracker_med", 0.8), ("tracker_fast", 0.36)):
+        sec = gap * 4
+        x = np.zeros(int(sec * SR))
+        for k in range(4):
+            p = int(k * gap * SR)
+            t = t_axis(0.09)
+            b = np.sin(2 * np.pi * 1180 * t) * np.exp(-t * 30) + np.sin(2 * np.pi * 2360 * t) * np.exp(-t * 45) * 0.3
+            x[p:p + len(b)] += b
+        write_ogg(norm(x, 0.35), "sfx/%s.ogg" % name)
+    # Telsiz paraziti (döngü) ve kilitlenme sesi
+    s = 8
+    st = bandnoise(s, 300, 7000, 70) * (0.7 + 0.3 * slowmod(s, 6, 0.8, 71))
+    write_ogg(norm(loopify(st, 0.5), 0.45), "amb/static_loop.ogg")
+    t = t_axis(0.6)
+    lock = np.sin(2 * np.pi * 660 * t) * (t < 0.12) + np.sin(2 * np.pi * 990 * t) * ((t > 0.16) & (t < 0.3))
+    write_ogg(norm(lock, 0.4), "sfx/radio_lock.ogg")
+    # Korkutma vuruşu
+    t = t_axis(1.6)
+    hit = bandnoise(1.6, 40, 9000, 72) * env_ad(len(t), 0.002, 0.25) * 1.5
+    hit += sum(np.sin(2 * np.pi * f * t) for f in (880, 932, 988, 1046)) * env_ad(len(t), 0.005, 0.6) * 0.4
+    hit += np.sin(2 * np.pi * 45 * t) * env_ad(len(t), 0.003, 0.5)
+    write_ogg(norm(reverb(hit, 1.8, 0.35), 0.95), "sfx/jumpscare.ogg")
+    # Kâğıt
+    pw, ph = 760, 900
+    base = np.zeros((ph, pw, 3)) + np.array([206, 198, 178])
+    n = fbm(pw, ph, base=90, octaves=4, seed=80)[..., None]
+    base = base * (0.86 + 0.18 * n)
+    yy, xx = np.mgrid[0:ph, 0:pw]
+    dd = np.sqrt(((xx - pw / 2) / (pw / 2)) ** 2 + ((yy - ph / 2) / (ph / 2)) ** 2)
+    base *= (1 - 0.28 * np.clip(dd - 0.5, 0, 1))[..., None]
+    for _ in range(3):
+        cx, cy, r = rng.uniform(80, pw - 80), rng.uniform(80, ph - 80), rng.uniform(30, 70)
+        ring = np.exp(-((np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2) - r) / 4) ** 2) * 18
+        base -= ring[..., None] * np.array([0.6, 0.8, 1.0])
+    Image.fromarray(np.clip(base, 0, 255).astype(np.uint8), "RGB").save(os.path.join(GAME, "gui", "paper.png"))
+    # Fener maskesi: siyah, ortasında yumuşak delik (fare ile hareket eder)
+    mw, mh = 2560, 1440
+    yy, xx = np.mgrid[0:mh, 0:mw]
+    d = np.sqrt((xx - mw / 2) ** 2 + (yy - mh / 2) ** 2)
+    a = np.clip((d - 120) / 140, 0, 1) ** 1.3 * 236
+    z = np.zeros((mh, mw))
+    Image.fromarray(np.dstack([z, z, z + 2, a]).astype(np.uint8), "RGBA").save(os.path.join(GAME, "gui", "flashlight_mask.png"))
+    print("  extras: tracker, static, jumpscare, paper, flashlight_mask")
+
+
 # =============================================================================
 
 def main():
@@ -1243,6 +1291,7 @@ def main():
     if a.only in (None, "audio"):
         print("Sesler…")
         gen_audio()
+        gen_extras()
     print("Tamam.")
 
 

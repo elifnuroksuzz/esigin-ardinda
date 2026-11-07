@@ -27,6 +27,7 @@ init -4 python:
 
     def sfx(name, channel="audio"):
         renpy.sound.play("audio/sfx/%s.ogg" % name, channel=channel)
+        show_caption(name)
 
     def amb(name, fade=2.0):
         if name is None:

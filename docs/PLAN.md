@@ -128,6 +128,13 @@ yere yerleştirildi; tekrar eden metin oyuncuyu yorar.
 - [x] Teçhizat ekranı (4 yuva), keşif derecelendirmesi (★), 2 yeni başarım
 - [x] Arayüz: Oswald başlık fontu, yeni diyalog kutusu, numaralı seçim kartları, yeni ana menü, HUD
 
+### Faz 2.7 — Eleştirmen geri bildirimi ✅ (docs/ELESTIRI.md)
+- [x] Yakalanma korkutması, dedektör sesi, gerilim eğrisi (nabız iniş-çıkışı)
+- [x] 12 belgelik Arşiv (keşif + hikâye), kâğıt/daktilo okuyucu
+- [x] Ses dalgası analizi, telsiz ayarlama, fenerle arama mini oyunları
+- [x] Kâbus modu, oyun sonu karnesi ve unvanlar, bölüm seçte yıldızlar, 15 başarım
+- [x] Ses altyazıları (erişilebilirlik)
+
 ### Faz 3 — Cila (senin sıradaki adımların)
 - [ ] Arka planları AI/foto ile değiştir (aynı dosya adlarıyla `game/images/bg/` içine koy — kod değişmez)
 - [ ] freesound.org'dan gerçek kayıtlarla sesleri güçlendir (aynı dosya adları)

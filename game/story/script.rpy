@@ -7,7 +7,7 @@
 label start:
     $ chapter_cursor = 1
     if autotest_mode:
-        $ zorluk = "gerilim"
+        $ zorluk = autotest_zorluk
     else:
         scene black
         $ quick_menu = False

@@ -23,11 +23,16 @@ init -2 python:
         (18, "SON GEÇİT", "11 Kasım · 05.18–07.30 · Z0'dan Çamlık'a"),
     ]
 
+    MAP_CHAPTER = {"kule": 3, "orman": 5, "servis": 6, "b3": 8, "gecis": 11, "drenaj": 13, "tahliye": 18}
+
     def chapter_label(n):
         return "ch%02d" % n
 
     def qte_time(sec):
-        return sec * (2.0 if (persistent.qte_relaxed or store.zorluk == "hikaye") else 1.0)
+        k = 2.0 if (persistent.qte_relaxed or store.zorluk == "hikaye") else 1.0
+        if store.zorluk == "kabus" and not persistent.qte_relaxed:
+            k = 0.75
+        return sec * k
 
 
 default autotest_mode = False
@@ -86,7 +91,8 @@ label chapter_intro(num):
 
 screen hud():
     zorder 40
-    if show_hud and not main_menu:
+    $ minigame = any(renpy.get_screen(n) for n in ("radio_tune", "waveform_puzzle", "flashlight_search", "end_report", "loadout", "doc_reader"))
+    if show_hud and not main_menu and not minigame:
         frame:
             xalign 1.0
             xoffset -14
@@ -266,8 +272,10 @@ screen chapter_select():
             text _("Ulaştığın bölümlerden başlayabilirsin. Kaynaklar o bölüme göre ayarlanır.") size 17 color "#8a857c"
             null height 8
             for num, title, sub in CHAPTERS:
+                $ cmaps = [k for k, v in MAP_CHAPTER.items() if v == num]
+                $ cst = "".join(("★" * persistent.map_stars.get(k, 0)).ljust(3, "☆") for k in cmaps)
                 if num <= persistent.max_chapter:
-                    textbutton "{:02d}  ·  {}".format(num, title):
+                    textbutton "{:02d}  ·  {}   {}".format(num, title, cst):
                         action Start("sel_%02d" % num)
                         text_size 22
                         text_idle_color "#cfc9bd"

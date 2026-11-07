@@ -47,6 +47,12 @@ Into the Breach'ten esinlenildi; analiz: [docs/OYUN_TASARIMI.md](docs/OYUN_TASAR
 - **Kaynaklar:** fener pili (aramak için), mermi, şişe, ses kaydedici, ilk yardım, Rezonans Kesici.
 - **Teçhizat:** ECHO'ya inmeden önce 4 yuvalık çantanı sen hazırlarsın.
 - **Derece:** her keşif tur, gürültü ve hasara göre ★–★★★ ile puanlanır.
+- **Dedektör:** yaratık yaklaştıkça hızlanan bip sesi. Yakalanırsan… hazırlıklı ol.
+- **Arşiv:** keşiflerde ve sahnelerde 12 gizli belge (ana menü → ARŞİV).
+- **Elle bulmacalar:** ses dalgası analizi, telsiz frekansı ayarlama, karanlıkta fenerle arama.
+- **Kâbus modu** (oyunu bitirince açılır) ve oyun sonu karnesi.
+
+Eleştirmen değerlendirmesi ve eksikler: [docs/ELESTIRI.md](docs/ELESTIRI.md)
 
 ## Nasıl oynanır
 
@@ -67,7 +73,7 @@ Into the Breach'ten esinlenildi; analiz: [docs/OYUN_TASARIMI.md](docs/OYUN_TASAR
 - Bir bölüme ulaştıktan sonra ana menüde **Bölüm Seç** açılır.
 - Yeni oyunda **Gerilim** (önerilen) veya **Hikâye** (2× süre, yavaş gerginlik) modu seçilir.
 - Her bölüm sonunda özet kartı ve otomatik kayıt; ana menüde **Devam Et**.
-- **13 başarım** (ana menü → Başarımlar). Bazıları gizli yetenek ister: hiç YANKI'ya kanmamak,
+- **15 başarım** (ana menü → Başarımlar). Bazıları gizli yetenek ister: hiç YANKI'ya kanmamak,
   hiçbir zamanlı seçimi kaçırmamak, Kırpıntı'ları mermi harcamadan atlatmak…
 
 ### Sunum

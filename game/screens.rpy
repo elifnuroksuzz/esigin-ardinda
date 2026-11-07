@@ -266,7 +266,7 @@ screen navigation():
         style_prefix "navigation"
 
         xpos 70
-        ypos (300 if main_menu else 150)
+        ypos (288 if main_menu else 150)
 
         spacing 2
 
@@ -283,6 +283,7 @@ screen navigation():
 
         textbutton _("YÜKLE") action ShowMenu("load")
         textbutton _("AYARLAR") action ShowMenu("preferences")
+        textbutton _("ARŞİV") action ShowMenu("archive")
         textbutton _("BAŞARIMLAR") action ShowMenu("achievements")
 
         if _in_replay:
@@ -301,13 +302,13 @@ style navigation_button_text is gui_button_text
 
 style navigation_button:
     size_group "navigation"
-    padding (0, 5, 40, 5)
+    padding (0, 3, 40, 3)
     hover_sound "audio/sfx/ui_hover.ogg"
     activate_sound "audio/sfx/ui_select.ogg"
 
 style navigation_button_text:
     font "fonts/Oswald-Medium.ttf"
-    size 24
+    size 22
     kerning 4
     idle_color "#8f8a80"
     hover_color "#e8d08a"
@@ -357,6 +358,8 @@ screen main_menu():
         text "v[config.version]" size 13 color "#55524c"
         $ got = sum(1 for a, n, d in ACHIEVEMENTS if achievement.has(a))
         text "◆ [got]/[len(ACHIEVEMENTS)]" size 13 color "#7a6a48"
+        if persistent.docs:
+            text "▤ [len(persistent.docs)]/[len(DOCS)]" size 13 color "#7a6a48"
         if persistent.map_stars:
             $ st = sum(persistent.map_stars.values())
             text "★ [st]/[len(MAPS) * 3]" size 13 color "#7a6a48"
@@ -639,6 +642,8 @@ screen preferences():
                     textbutton _("Ekran sarsıntısı") action ToggleField(persistent, "allow_shake")
                     textbutton _("Yanıp sönme") action ToggleField(persistent, "allow_flash")
                     textbutton _("Zamanlı seçimde 2× süre") action ToggleField(persistent, "qte_relaxed")
+                    textbutton _("Ani korkutmalar") action ToggleField(persistent, "jumpscares")
+                    textbutton _("Ses altyazıları") action ToggleField(persistent, "captions")
 
                 vbox:
                     style_prefix "check"

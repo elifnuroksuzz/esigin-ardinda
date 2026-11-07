@@ -95,6 +95,8 @@ init -3 python:
         global gerginlik
         if n > 0 and store.zorluk == "hikaye":
             n = max(1, n // 2)
+        elif n > 0 and store.zorluk == "kabus":
+            n = int(n * 1.5)
         gerginlik = max(0, min(100, gerginlik + n))
         update_pulse()
 

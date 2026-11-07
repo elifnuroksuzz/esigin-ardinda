@@ -376,6 +376,10 @@ label .anahtar:
 
     $ renpy.pause(2.0)
     call final_achievements
+    window hide
+    $ quick_menu = False
+    call screen end_report
+    $ quick_menu = True
     scene black with long_fade
     call screen credits
     jump .post_credits

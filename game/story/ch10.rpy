@@ -88,7 +88,12 @@ label ch10:
     scene bg d_corridor with long_fade
     show mert at sil_center with dissolve
     m_tel "Aras? Cevap ver."
-    $ renpy.pause(1.5, hard=True)
+    $ sfx("static")
+    narrator "Yalnızca parazit. Karantina kapıları sinyali bozuyor. Aras'ın telsizi başka bir kanala kaymış olmalı."
+    window hide
+    $ quick_menu = False
+    call screen radio_tune("Aras'ın kanalını bul. Parazitin içinde nefes sesi var.", 31.0, "TELSİZ · D-14")
+    $ quick_menu = True
     $ sfx("radio")
     a_tel "{size=-4}Buradayım…{/size}"
     m_tel "Hakan?"

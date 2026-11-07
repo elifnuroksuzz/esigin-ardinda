@@ -31,7 +31,16 @@ label autotest_run:
     if os.environ.get("ESIK_AUTOTEST"):
         $ suppress_overlay = False
         $ autotest_mode = True
+        $ autotest_zorluk = os.environ.get("ESIK_ZORLUK", "gerilim")
         $ _game_menu_screen = "save"
+        if os.environ.get("ESIK_CALL"):
+            $ setup_for(12)
+            $ autotest_mode = False
+            $ renpy.config.skipping = None
+            $ persistent.docs = set(["riza_defter", "hakan_kizi", "k2_rapor"])
+            $ _cn, _ca = os.environ["ESIK_CALL"].split("|", 1)
+            $ renpy.call_screen(_cn, *eval(_ca))
+            $ renpy.quit()
         if os.environ.get("ESIK_SCREEN"):
             $ setup_for(8)
             $ autotest_mode = False

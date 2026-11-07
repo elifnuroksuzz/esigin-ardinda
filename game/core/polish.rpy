@@ -34,6 +34,7 @@ default persistent.tips = set()
 
 ## Zorluk: "hikaye" veya "gerilim"
 default zorluk = "gerilim"
+default autotest_zorluk = "gerilim"
 default qte_kacan = 0
 default chapter_notes_start = 0
 default chapter_kanit_start = 0
@@ -130,6 +131,8 @@ init -2 python:
         ("eski_hat", "Eski Hat", "Nöbetçi'yi acil bastırma hattıyla durdur."),
         ("golge", "Gölge", "Bir keşfi hiç fark edilmeden ★★★ ile bitir."),
         ("stratejist", "Stratejist", "Bütün keşiflerde ★★★ al."),
+        ("arsiv_faresi", "Arşiv Faresi", "On iki belgenin tamamını bul."),
+        ("kabus", "Kâbus", "Oyunu Kâbus zorluğunda bitir."),
         ("esik", "Eşiğin Ardında", "Oyunu bitir."),
     ]
     for _aid, _an, _ad in ACHIEVEMENTS:
@@ -220,7 +223,7 @@ screen content_warning():
         null height 10
         text "En iyi deneyim için kulaklıkla, karanlık bir odada oyna.":
             size 20 color "#c8a24a" xalign 0.5 text_align 0.5
-        text "Ekran sarsıntısı, yanıp sönme ve zamanlı seçim süresi Ayarlar'dan değiştirilebilir.":
+        text "Ani korkutmalar, ses altyazıları, ekran sarsıntısı ve zamanlı seçim süresi Ayarlar'dan değiştirilebilir.":
             size 16 color "#77736b" xalign 0.5 text_align 0.5
 
 
@@ -260,6 +263,19 @@ screen difficulty():
                 spacing 6
                 text "HİKÂYE" font "fonts/Oswald-SemiBold.ttf" size 28 kerning 4 color "#6fa8dc"
                 text "Hikâyeye odaklan. Zamanlı seçimlerde iki kat süre, gerginlik yavaş artar." size 17 color "#cfc9bd"
+        if persistent.completed:
+            button:
+                xsize 720
+                padding (28, 18, 28, 18)
+                idle_background Solid("#160c0c")
+                hover_background Solid("#2a1212")
+                hover_sound "audio/sfx/ui_hover.ogg"
+                activate_sound "audio/sfx/ui_select.ogg"
+                action Return("kabus")
+                vbox:
+                    spacing 6
+                    text "KÂBUS" font "fonts/Oswald-SemiBold.ttf" size 28 kerning 4 color "#d04a3a"
+                    text "Oyunu bitirenler için. Daha az can, keşif atlanamaz, yaratıklar daha iyi duyar, süreler kısa." size 17 color "#cfc9bd"
         null height 6
         text "Ayarlar'dan istediğin zaman değiştirebilirsin." size 15 color "#666" xalign 0.5
 
@@ -359,6 +375,9 @@ label chapter_outro(num):
 
 label final_achievements:
     $ unlock("esik")
+    if zorluk == "kabus":
+        $ unlock("kabus")
+        $ persistent.kabus_done = True
     if sahte_kanma == 0:
         $ unlock("kulak")
     if qte_kacan == 0:

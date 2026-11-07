@@ -20,6 +20,9 @@ label ch04:
     a "Elektrik kesintisiyle aynı saat mi?"
     rz "Aynı dakika. İnsan böyle bir sessizliği unutmaz."
     $ add_note("ruza_sessizlik")
+    narrator "Rıza sobanın arkasından yıpranmış bir defter çıkarır."
+    rz "Bunu ECHO'nun adamlarına vermedim. Size veriyorum."
+    call read_doc("riza_defter")
 
     narrator "Duvarda düzinelerce kablo, çoğu kesik. Hangi hattın hâlâ yaşadığını bulmak, servis araçlarının hangi yoldan geçtiğini gösterecek."
 
@@ -45,8 +48,13 @@ label .hat:
     narrator "Canlı hattın izini takip eden Aras, bir servis yolunun haritasını çıkarır. Araçlar eski servis yolundan, ormanın içinden geçiyor."
 
     ## 2. Kesilmiş uyarı -------------------------------------------------------
+    a "Rölenin hafızasında kayıtlı iletimler var. Doğru frekansı bulursak dinleyebiliriz."
+    window hide
+    $ quick_menu = False
+    call screen radio_tune("Rölenin alıcısını ayarla. Parazitin içinde bir insan sesi var.", 63.0, "RÖLE ALICISI")
+    $ quick_menu = True
     $ sfx("radio")
-    narrator "Rölenin hafızasında yarım kalmış bir mesaj var. Gönderen: Dr. Kemal Demir. Alıcı: Adrian Voss."
+    narrator "Parazit çekilir. Rölenin hafızasında yarım kalmış bir mesaj. Gönderen: Dr. Kemal Demir. Alıcı: Adrian Voss."
     k_kayit "…deneyi durdurmamız gerekiyor. Kuleleri aynı anda susturmayın. Tekrar ediyorum, aynı anda değil. Personeli tahliye—"
     $ sfx("static")
     narrator "Kayıt kesilir. Voss'un yanıtı yok."
