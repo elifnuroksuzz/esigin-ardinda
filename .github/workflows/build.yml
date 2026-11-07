@@ -58,8 +58,8 @@ jobs:
           SDL_VIDEODRIVER: dummy
         run: |
           mkdir -p dist
-          ./renpy-sdk/renpy.sh launcher distribute "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/dist" --package pc --package mac
-          ls -la dist
+          cd renpy-sdk && ./renpy.sh launcher distribute "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/dist" --package pc --package mac
+          ls -la "$GITHUB_WORKSPACE/dist"
 
       - name: Web paketi
         env:
@@ -67,7 +67,7 @@ jobs:
           SDL_VIDEODRIVER: dummy
         run: |
           if [ -d renpy-sdk/web ]; then
-            ./renpy-sdk/renpy.sh launcher web_build "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/web-build"
+            (cd renpy-sdk && ./renpy.sh launcher web_build "$GITHUB_WORKSPACE" --destination "$GITHUB_WORKSPACE/web-build")
             ls -la web-build
           else
             echo "Web desteği bu SDK sürümünde bulunamadı; atlandı."
