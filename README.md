@@ -47,7 +47,7 @@ Komut satırından:
 
 - **Kırmızı çubuklu seçimler zamanlıdır.** Süre biterse karar senin yerine verilir.
   (Ayarlar → *Zamanlı seçimde 2× süre*.)
-- **Sol üstte HUD** (ECHO içinde): fener pili, mermi, Rezonans Kesici, ilk yardım, nabız.
+- **Sağ üstte HUD** (ECHO içinde): fener pili, mermi, Rezonans Kesici, ilk yardım, nabız.
 - **Duyduğun her sese güvenme.** Tekrar eden nefes, gecikme ve yön değişimi YANKI'nın işaretidir.
 - Hata yapmak oyunu bitirmez; bir bedeli olur ya da yeniden denersin.
 - Bir bölüme ulaştıktan sonra ana menüde **Bölüm Seç** açılır.
